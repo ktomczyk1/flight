@@ -1,0 +1,86 @@
+package com.flightbuddy.flightbuddy;
+
+public enum Airport {
+    WAW("Warszawa (WAW)"),
+    GDN("Gdańsk (GDN)"),
+    KRK("Kraków (KRK)"),
+    KTW("Katowice (KTW)"),
+    FRA("Frankfurt (FRA)"),
+    BER("Berlin (BER)"),
+    HAM("Hamburg (HAM)"),
+    MUC("Monachium (MUC)"),
+    CPH("Kopenhaga (CPH"),
+    VNO("Wilno (VNO)"),
+    SMO("Moskwa (SMO"),
+    LED("Petersburg (LED)"),
+    VVO("Władywostok (VVO)"),
+    MSQ("Mińsk (MSQ"),
+    OUL("Oulu (OUL)"),
+    HEL("Helsinki (HEL)"),
+    MMX("Malmo (MMX"),
+    ARN("Sztokholm (ARN)"),
+    PRG("Praga (PRG)"),
+    BTS("Bratysława (BTS)"),
+    INN("Innsbruck (INN)"),
+    VIE("Wiedeń (VIE)"),
+    ZRH("Zurych (ZRH)"),
+    AMS("Amsterdam (AMS"),
+    BRU("Bruksela (BRU)"),
+    LUX("Luksemburg (LUX)"),
+    BUD("Budapeszt (BUD)"),
+    LJU("Lublana (LJU)"),
+    RMO("Kiszyniów (RMO)"),
+    TTL("Tallin (TTL)"),
+    RIX("Ryga (RIX)"),
+    OSL("Oslo (OSL)"),
+    BGO("Bergen (BGO)"),
+    ZAG("Zagrzeb (ZAG)"),
+    SPU("Split (SPU)"),
+    SJJ("Sarajewo (SJJ)"),
+    TGD("Podgorica (TGD)"),
+    PRN("Prisztina (PRN)"),
+    BEG("Belgrad (BEG)"),
+    TIA("Tirana (TIA)"),
+    SKP("Skopje (SKP)"),
+    OTP("Bukareszt (OTP"),
+    IAS("Jassy (IAS)"),
+    SBZ("Sybin (SBZ)"),
+    ATH("Ateny (ATH)"),
+    CHQ("Chania (CHQ)"),
+    SKG("Saloniki (SKG)"),
+    BOJ("Burgas (BOJ)"),
+    SOF("Sofia (SOF)"),
+    IST("Stambuł (IST)"),
+    AYT("Antalya (AYT)"),
+    ESB("Ankara (ESB)"),
+    ADB("Izmir (ADB)"),
+    MAD("Madryt (MAD)"),
+    AGP("Malaga (AGP)"),
+    BCN("Barcelona (BCN)"),
+    PMI("Palma de Mallorca (PMI)"),
+    LIS("Lizbona (LIS)"),
+    OPO("Porto (OPO)"),
+    DUB("Dublin (DUB)"),
+    MXP("Mediolan (MXP)"),
+    FCO("Rzym (FCO)"),
+    VCE("Wenecja (VCE)"),
+    BLQ("Bolonia (BLQ)"),
+    CDG("Paryż (CDG)"),
+    MRS("Marsylia (MRS)"),
+    NCE("Nicea (NCE)"),
+    LHR("Londyn (LHR)"),
+    MAN("Manchester (MAN)"),
+    EDI("Edynburg (EDI)"),
+    RKV("Reykjavik (RKV)");
+
+
+    private final String displayName;
+
+    Airport(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+}

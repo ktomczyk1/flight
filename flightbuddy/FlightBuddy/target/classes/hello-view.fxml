@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.flightbuddy.flightbuddy.HelloController"
+            prefWidth="1200"
+            prefHeight="600">
+
+    <!-- MAPA EUROPY -->
+    <center>
+        <Pane fx:id="mapPane"
+              prefWidth="900"
+              prefHeight="600"
+              minWidth="900"
+              minHeight="600"
+              maxWidth="900"
+              maxHeight="600"/>
+    </center>
+
+    <!-- PANEL INFO (OSOBNY FXML + CONTROLLER) -->
+    <right>
+        <fx:include source="info-panel.fxml"/>
+
+    </right>
+
+</BorderPane>

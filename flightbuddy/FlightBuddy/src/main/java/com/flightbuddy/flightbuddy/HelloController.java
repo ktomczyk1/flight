@@ -1,37 +1,43 @@
 package com.flightbuddy.flightbuddy;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class HelloController {
 
+    // ===== FXML =====
     @FXML
     private Pane mapPane;
+
+    // kontroler prawego panelu (fx:include)
+    @FXML
+    private InfoPanelController infoPanelController;
+
+    // serwis logiki
+    private final CountryInfoService countryInfoService = new CountryInfoService();
 
     @FXML
     public void initialize() {
 
-        // 1) Wczytanie mapy
+        // ===== MAPA EUROPY =====
         Image map = new Image(getClass().getResourceAsStream("/Map_Europe.png"));
         ImageView mapView = new ImageView(map);
-        mapView.fitWidthProperty().bind(mapPane.widthProperty());
-        mapView.setPreserveRatio(true);
-
-        mapPane.setOnMouseClicked(e -> {
-            System.out.println((int)e.getX() + ", " + (int)e.getY() + ",");
-        });
+        mapView.setFitWidth(900);
+        mapView.setFitHeight(600);
+        mapView.setPreserveRatio(false);
 
         mapPane.getChildren().add(mapView);
 
-        // Polygon POLSKA
+        // ===== POLSKA =====
         Polygon poland = new Polygon(
                 430, 314,
                 426, 326,
@@ -57,21 +63,15 @@ public class HelloController {
                 428, 309
         );
 
-        poland.setFill(Color.TRANSPARENT);  // niewidoczne
-        poland.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                poland,
+                () -> openPolandView()
+        );
 
-        // Efekt podświetlenia
-        poland.setOnMouseEntered(e ->
-                poland.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
 
-        poland.setOnMouseExited(e ->
-                poland.setFill(Color.TRANSPARENT));
-
-        // Dodanie polygonu nad mapą
         mapPane.getChildren().add(poland);
 
-        // otworzenie mapy polski
-        poland.setOnMouseClicked(e -> openCountryMap("Map_Poland.png"));
+
 
 
         // Polygon DANIA
@@ -104,17 +104,12 @@ public class HelloController {
                 373, 293
         );
 
-        denmark.setFill(Color.TRANSPARENT);  // niewidoczne
-        denmark.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                denmark,
+                () -> openDenmarkView()
 
-        // 3) Efekt podświetlenia
-        denmark.setOnMouseEntered(e ->
-                denmark.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
+        );
 
-        denmark.setOnMouseExited(e ->
-                denmark.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(denmark);
 
         // Polygon lithuania
@@ -137,20 +132,13 @@ public class HelloController {
 
         );
 
-        lithuania.setFill(Color.TRANSPARENT);  // niewidoczne
-        lithuania.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                lithuania,
+                () -> openLithuaniaView()
 
-        // 3) Efekt podświetlenia
-        lithuania.setOnMouseEntered(e ->
-                lithuania.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
+        );
 
-        lithuania.setOnMouseExited(e ->
-                lithuania.setFill(Color.TRANSPARENT));
-
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(lithuania);
-
 
         // Polygon russia
         Polygon russia = new Polygon(
@@ -296,7 +284,13 @@ public class HelloController {
 
         );
 
-        russia.setFill(Color.TRANSPARENT);  // niewidoczne
+        setupCountryPolygon(
+                russia,
+                () -> openRussiaView()
+
+        );
+
+        mapPane.getChildren().add(russia);
 
 
         // Polygon kaliningrad
@@ -311,30 +305,14 @@ public class HelloController {
                 481, 301
 
         );
-        kaliningrad.setFill(Color.TRANSPARENT);
+
 
         //ROSJA + KALININGRAD jako calosc
-        Polygon[] russiaGroup = { russia, kaliningrad };
+        //Polygon[] russiaGroup = { russia, kaliningrad };
 
-        EventHandler<MouseEvent> enterRussia = e -> {
-            for (Polygon p : russiaGroup)
-                p.setFill(Color.rgb(255,255,255,0.3));
-        };
+        //mapPane.getChildren().addAll(russia, kaliningrad);
 
-        EventHandler<MouseEvent> exitRussia = e -> {
-            for (Polygon p : russiaGroup)
-                p.setFill(Color.TRANSPARENT);
-        };
-
-        russia.setOnMouseEntered(enterRussia);
-        russia.setOnMouseExited(exitRussia);
-
-        kaliningrad.setOnMouseEntered(enterRussia);
-        kaliningrad.setOnMouseExited(exitRussia);
-
-        mapPane.getChildren().addAll(russia, kaliningrad);
-
-    // Polygon belgium
+    // Polygon belarus
         Polygon belarus = new Polygon(
                 519, 311,
                 521, 325,
@@ -377,20 +355,14 @@ public class HelloController {
 
         );
 
-        belarus.setFill(Color.TRANSPARENT);  // niewidoczne
-        belarus.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                belarus,
+                () -> openBelarusView()
+        );
 
-        // 3) Efekt podświetlenia
-        belarus.setOnMouseEntered(e ->
-                belarus.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        belarus.setOnMouseExited(e ->
-                belarus.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(belarus);
 
-        // Polygon belgium
+        // Polygon finland
         Polygon finland = new Polygon(
                 489, 35,
                 514, 48,
@@ -446,20 +418,15 @@ public class HelloController {
 
         );
 
-        finland.setFill(Color.TRANSPARENT);  // niewidoczne
-        finland.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                finland,
+                () -> openFinlandView()
 
-        // 3) Efekt podświetlenia
-        finland.setOnMouseEntered(e ->
-                finland.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
+        );
 
-        finland.setOnMouseExited(e ->
-                finland.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(finland);
 
-        // Polygon belgium
+        // Polygon ukraine
         Polygon ukraine = new Polygon(
                 520, 345,
                 524, 360,
@@ -538,20 +505,14 @@ public class HelloController {
 
         );
 
-        ukraine.setFill(Color.TRANSPARENT);  // niewidoczne
-        ukraine.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                ukraine,
+                () -> openUkraineView()
+        );
 
-        // 3) Efekt podświetlenia
-        ukraine.setOnMouseEntered(e ->
-                ukraine.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        ukraine.setOnMouseExited(e ->
-                ukraine.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(ukraine);
 
-        // Polygon belgium
+        // Polygon moldova
         Polygon moldova = new Polygon(
                 555, 400,
                 564, 418,
@@ -572,20 +533,14 @@ public class HelloController {
 
         );
 
-        moldova.setFill(Color.TRANSPARENT);  // niewidoczne
-        moldova.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                moldova,
+                () -> openMoldovaView()
+        );
 
-        // 3) Efekt podświetlenia
-        moldova.setOnMouseEntered(e ->
-                moldova.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        moldova.setOnMouseExited(e ->
-                moldova.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(moldova);
 
-        // Polygon belgium
+        // Polygon estonia
         Polygon estonia = new Polygon(
                 564, 215,
                 560, 222,
@@ -612,20 +567,14 @@ public class HelloController {
 
         );
 
-        estonia.setFill(Color.TRANSPARENT);  // niewidoczne
-        estonia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                estonia,
+                () -> openEstoniaView()
+        );
 
-        // 3) Efekt podświetlenia
-        estonia.setOnMouseEntered(e ->
-                estonia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        estonia.setOnMouseExited(e ->
-                estonia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(estonia);
 
-        // Polygon belgium
+        // Polygon latvia
         Polygon latvia = new Polygon(
                 548, 279,
                 564, 272,
@@ -650,20 +599,14 @@ public class HelloController {
 
         );
 
-        latvia.setFill(Color.TRANSPARENT);  // niewidoczne
-        latvia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                latvia,
+                () -> openLatviaView()
+        );
 
-        // 3) Efekt podświetlenia
-        latvia.setOnMouseEntered(e ->
-                latvia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        latvia.setOnMouseExited(e ->
-                latvia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(latvia);
 
-        // Polygon belgium
+        // Polygon sweden
         Polygon sweden = new Polygon(
                 397, 225,
                 403, 221,
@@ -730,20 +673,14 @@ public class HelloController {
                 398, 225
         );
 
-        sweden.setFill(Color.TRANSPARENT);  // niewidoczne
-        sweden.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                sweden,
+                () -> openSwedenView()
+        );
 
-        // 3) Efekt podświetlenia
-        sweden.setOnMouseEntered(e ->
-                sweden.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        sweden.setOnMouseExited(e ->
-                sweden.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(sweden);
 
-        // Polygon belgium
+        // Polygon norway
         Polygon norway = new Polygon(
                 578, 30,
                 591, 19,
@@ -839,20 +776,14 @@ public class HelloController {
                 573, 32
         );
 
-        norway.setFill(Color.TRANSPARENT);  // niewidoczne
-        norway.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                norway,
+                () -> openNorwayView()
+        );
 
-        // 3) Efekt podświetlenia
-        norway.setOnMouseEntered(e ->
-                norway.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        norway.setOnMouseExited(e ->
-                norway.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(norway);
 
-        // Polygon belgium
+        // Polygon germany
         Polygon germany = new Polygon(
                 427, 313,
                 424, 324,
@@ -926,20 +857,17 @@ public class HelloController {
                 428, 312
         );
 
-        germany.setFill(Color.TRANSPARENT);  // niewidoczne
-        germany.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                germany,
+                () -> openGermanyView()
 
-        // 3) Efekt podświetlenia
-        germany.setOnMouseEntered(e ->
-                germany.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
+        );
 
-        germany.setOnMouseExited(e ->
-                germany.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(germany);
 
-        // Polygon belgium
+
+
+        // Polygon czechia
         Polygon czechia = new Polygon(
                 470, 380,
                 469, 372,
@@ -970,20 +898,14 @@ public class HelloController {
                 470, 380
         );
 
-        czechia.setFill(Color.TRANSPARENT);  // niewidoczne
-        czechia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                czechia,
+                () -> openCzechiaView()
+        );
 
-        // 3) Efekt podświetlenia
-        czechia.setOnMouseEntered(e ->
-                czechia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        czechia.setOnMouseExited(e ->
-                czechia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(czechia);
 
-        // Polygon belgium
+        // Polygon slovakia
         Polygon slovakia = new Polygon(
                 454, 394,
                 453, 405,
@@ -1014,20 +936,14 @@ public class HelloController {
 
                 );
 
-        slovakia.setFill(Color.TRANSPARENT);  // niewidoczne
-        slovakia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                slovakia,
+                () -> openSlovakiaView()
+        );
 
-        // 3) Efekt podświetlenia
-        slovakia.setOnMouseEntered(e ->
-                slovakia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        slovakia.setOnMouseExited(e ->
-                slovakia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(slovakia);
 
-        // Polygon belgium
+        // Polygon austria
         Polygon austria = new Polygon(
                 384, 420,
                 387, 415,
@@ -1080,20 +996,14 @@ public class HelloController {
 
         );
 
-        austria.setFill(Color.TRANSPARENT);  // niewidoczne
-        austria.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                austria,
+                () -> openAustriaView()
+        );
 
-        // 3) Efekt podświetlenia
-        austria.setOnMouseEntered(e ->
-                austria.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        austria.setOnMouseExited(e ->
-                austria.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(austria);
 
-        // Polygon belgium
+        // Polygon switzerland
         Polygon switzerland = new Polygon(
                 388, 424,
                 381, 420,
@@ -1123,20 +1033,14 @@ public class HelloController {
 
         );
 
-        switzerland.setFill(Color.TRANSPARENT);  // niewidoczne
-        switzerland.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                switzerland,
+                () -> openSwitzerlandView()
+        );
 
-        // 3) Efekt podświetlenia
-        switzerland.setOnMouseEntered(e ->
-                switzerland.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        switzerland.setOnMouseExited(e ->
-                switzerland.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(switzerland);
 
-        // Polygon belgium
+        // Polygon netherlands
         Polygon netherlands = new Polygon(
                 357, 323,
                 352, 340,
@@ -1169,17 +1073,11 @@ public class HelloController {
                 357, 321
                 );
 
-        netherlands.setFill(Color.TRANSPARENT);  // niewidoczne
-        netherlands.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                netherlands,
+                () -> openNetherlandsView()
+        );
 
-        // 3) Efekt podświetlenia
-        netherlands.setOnMouseEntered(e ->
-                netherlands.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        netherlands.setOnMouseExited(e ->
-                netherlands.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(netherlands);
 
         // Polygon belgium
@@ -1221,20 +1119,14 @@ public class HelloController {
 
                 );
 
-        belgium.setFill(Color.TRANSPARENT);  // niewidoczne
-        belgium.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                belgium,
+                () -> openBelgiumView()
+        );
 
-        // 3) Efekt podświetlenia
-        belgium.setOnMouseEntered(e ->
-                belgium.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        belgium.setOnMouseExited(e ->
-                belgium.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(belgium);
 
-        // Polygon hungary
+        // Polygon luxemburg
         Polygon luxemburg = new Polygon(
                 340, 372,
                 347, 376,
@@ -1245,20 +1137,14 @@ public class HelloController {
 
         );
 
-        luxemburg.setFill(Color.TRANSPARENT);  // niewidoczne
-        luxemburg.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                luxemburg,
+                () -> openLuxemburgView()
+        );
 
-        // 3) Efekt podświetlenia
-        luxemburg.setOnMouseEntered(e ->
-                luxemburg.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        luxemburg.setOnMouseExited(e ->
-                luxemburg.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(luxemburg);
 
-        // Polygon bosnia
+        // Polygon hungary
         Polygon hungary = new Polygon(
                 456, 403,
                 462, 406,
@@ -1304,20 +1190,14 @@ public class HelloController {
 
         );
 
-        hungary.setFill(Color.TRANSPARENT);  // niewidoczne
-        hungary.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                hungary,
+                () -> openHungaryView()
+        );
 
-        // 3) Efekt podświetlenia
-        hungary.setOnMouseEntered(e ->
-                hungary.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        hungary.setOnMouseExited(e ->
-                hungary.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(hungary);
 
-        // Polygon bosnia
+        // Polygon slovenia
         Polygon slovenia = new Polygon(
                 422, 429,
                 420, 434,
@@ -1351,20 +1231,15 @@ public class HelloController {
 
                 );
 
-        slovenia.setFill(Color.TRANSPARENT);  // niewidoczne
-        slovenia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                slovenia,
+                () -> openSloveniaView()
+        );
 
-        // 3) Efekt podświetlenia
-        slovenia.setOnMouseEntered(e ->
-                slovenia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        slovenia.setOnMouseExited(e ->
-                slovenia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(slovenia);
 
-        // Polygon bosnia
+
+        // Polygon croatia
         Polygon croatia = new Polygon(
                 477, 451,
                 476, 444,
@@ -1423,17 +1298,11 @@ public class HelloController {
                 475, 454
         );
 
-        croatia.setFill(Color.TRANSPARENT);  // niewidoczne
-        croatia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                croatia,
+                () -> openCroatiaView()
+        );
 
-        // 3) Efekt podświetlenia
-        croatia.setOnMouseEntered(e ->
-                croatia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        croatia.setOnMouseExited(e ->
-                croatia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(croatia);
 
         // Polygon bosnia
@@ -1470,20 +1339,14 @@ public class HelloController {
                 468, 481
         );
 
-        bosnia.setFill(Color.TRANSPARENT);  // niewidoczne
-        bosnia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                bosnia,
+                () -> openBosniaView()
+        );
 
-        // 3) Efekt podświetlenia
-        bosnia.setOnMouseEntered(e ->
-                bosnia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        bosnia.setOnMouseExited(e ->
-                bosnia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(bosnia);
 
-        // Polygon iceland
+        // Polygon montenegro
         Polygon montenegro = new Polygon(
                 464, 488,
                 468, 483,
@@ -1508,20 +1371,14 @@ public class HelloController {
                 463, 485
         );
 
-        montenegro.setFill(Color.TRANSPARENT);  // niewidoczne
-        montenegro.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                montenegro,
+                () -> openMontenegroView()
+        );
 
-        // 3) Efekt podświetlenia
-        montenegro.setOnMouseEntered(e ->
-                montenegro.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        montenegro.setOnMouseExited(e ->
-                montenegro.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(montenegro);
 
-        // Polygon iceland
+        // Polygon kosovo
         Polygon kosovo = new Polygon(
                 483, 487,
                 483, 484,
@@ -1537,20 +1394,14 @@ public class HelloController {
                 483, 486
         );
 
-        kosovo.setFill(Color.TRANSPARENT);  // niewidoczne
-        kosovo.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                kosovo,
+                () -> openKosovoView()
+        );
 
-        // 3) Efekt podświetlenia
-        kosovo.setOnMouseEntered(e ->
-                kosovo.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        kosovo.setOnMouseExited(e ->
-                kosovo.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(kosovo);
 
-        // Polygon iceland
+        // Polygon serbia
         Polygon serbia = new Polygon(
                 502, 489,
                 505, 491,
@@ -1596,21 +1447,15 @@ public class HelloController {
                 505, 491
         );
 
-        serbia.setFill(Color.TRANSPARENT);  // niewidoczne
-        serbia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                serbia,
+                () -> openSerbiaView()
+        );
 
-        // 3) Efekt podświetlenia
-        serbia.setOnMouseEntered(e ->
-                serbia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        serbia.setOnMouseExited(e ->
-                serbia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(serbia);
 
 
-        // Polygon iceland
+        // Polygon albania
         Polygon albania = new Polygon(
                 475, 496,
                 475, 495,
@@ -1648,20 +1493,14 @@ public class HelloController {
                 476, 496
         );
 
-        albania.setFill(Color.TRANSPARENT);  // niewidoczne
-        albania.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                albania,
+                () -> openAlbaniaView()
+        );
 
-        // 3) Efekt podświetlenia
-        albania.setOnMouseEntered(e ->
-                albania.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        albania.setOnMouseExited(e ->
-                albania.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(albania);
 
-        // Polygon iceland
+        // Polygon macedonia
         Polygon macedonia = new Polygon(
                 491, 512,
                 488, 508,
@@ -1681,20 +1520,14 @@ public class HelloController {
                 492, 512
         );
 
-        macedonia.setFill(Color.TRANSPARENT);  // niewidoczne
-        macedonia.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                macedonia,
+                () -> openMacedoniaView()
+        );
 
-        // 3) Efekt podświetlenia
-        macedonia.setOnMouseEntered(e ->
-                macedonia.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        macedonia.setOnMouseExited(e ->
-                macedonia.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(macedonia);
 
-        // Polygon iceland
+        // Polygon romania
         Polygon romania = new Polygon(
                 580, 440,
                 581, 447,
@@ -1771,20 +1604,14 @@ public class HelloController {
 
                 );
 
-        romania.setFill(Color.TRANSPARENT);  // niewidoczne
-        romania.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                romania,
+                () -> openRomaniaView()
+        );
 
-        // 3) Efekt podświetlenia
-        romania.setOnMouseEntered(e ->
-                romania.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        romania.setOnMouseExited(e ->
-                romania.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(romania);
 
-        // Polygon iceland
+        // Polygon bulgaria
         Polygon bulgaria = new Polygon(
                 569, 467,
                 562, 466,
@@ -1835,20 +1662,14 @@ public class HelloController {
 
         );
 
-        bulgaria.setFill(Color.TRANSPARENT);  // niewidoczne
-        bulgaria.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                bulgaria,
+                () -> openBulgariaView()
+        );
 
-        // 3) Efekt podświetlenia
-        bulgaria.setOnMouseEntered(e ->
-                bulgaria.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        bulgaria.setOnMouseExited(e ->
-                bulgaria.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(bulgaria);
 
-        // Polygon iceland
+        // Polygon greece
         Polygon greece = new Polygon(
                 484, 528,
                 488, 522,
@@ -1965,20 +1786,14 @@ public class HelloController {
 
         );
 
-        greece.setFill(Color.TRANSPARENT);  // niewidoczne
-        greece.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                greece,
+                () -> openGreeceView()
+        );
 
-        // 3) Efekt podświetlenia
-        greece.setOnMouseEntered(e ->
-                greece.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        greece.setOnMouseExited(e ->
-                greece.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(greece);
 
-        // Polygon iceland
+        // Polygon turkey
         Polygon turkey = new Polygon(
                 543, 514,
                 544, 509,
@@ -2120,20 +1935,14 @@ public class HelloController {
 
         );
 
-        turkey.setFill(Color.TRANSPARENT);  // niewidoczne
-        turkey.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                turkey,
+                () -> openTurkeyView()
+        );
 
-        // 3) Efekt podświetlenia
-        turkey.setOnMouseEntered(e ->
-                turkey.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        turkey.setOnMouseExited(e ->
-                turkey.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(turkey);
 
-        // Polygon iceland
+        // Polygon spain
         Polygon spain = new Polygon(
                 195, 492,
                 192, 487,
@@ -2239,20 +2048,14 @@ public class HelloController {
 
         );
 
-        spain.setFill(Color.TRANSPARENT);  // niewidoczne
-        spain.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                spain,
+                () -> openSpainView()
+        );
 
-        // 3) Efekt podświetlenia
-        spain.setOnMouseEntered(e ->
-                spain.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        spain.setOnMouseExited(e ->
-                spain.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(spain);
 
-        // Polygon iceland
+        // Polygon portugal
         Polygon portugal = new Polygon(
                 207, 568,
                 207, 564,
@@ -2300,20 +2103,14 @@ public class HelloController {
 
         );
 
-        portugal.setFill(Color.TRANSPARENT);  // niewidoczne
-        portugal.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                portugal,
+                () -> openPortugalView()
+        );
 
-        // 3) Efekt podświetlenia
-        portugal.setOnMouseEntered(e ->
-                portugal.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        portugal.setOnMouseExited(e ->
-                portugal.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(portugal);
 
-        // Polygon iceland
+        // Polygon ireland
         Polygon ireland = new Polygon(
                 215, 308,
                 216, 313,
@@ -2398,20 +2195,14 @@ public class HelloController {
 
         );
 
-        ireland.setFill(Color.TRANSPARENT);  // niewidoczne
-        ireland.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                ireland,
+                () -> openIrelandView()
+        );
 
-        // 3) Efekt podświetlenia
-        ireland.setOnMouseEntered(e ->
-                ireland.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        ireland.setOnMouseExited(e ->
-                ireland.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(ireland);
 
-        // Polygon iceland
+        // Polygon italy
         Polygon italy = new Polygon(
                 357, 465,
                 353, 463,
@@ -2581,20 +2372,14 @@ public class HelloController {
 
         );
 
-        italy.setFill(Color.TRANSPARENT);  // niewidoczne
-        italy.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                italy,
+                () -> openItalyView()
+        );
 
-        // 3) Efekt podświetlenia
-        italy.setOnMouseEntered(e ->
-                italy.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        italy.setOnMouseExited(e ->
-                italy.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(italy);
 
-        // Polygon iceland
+        // Polygon france
         Polygon france = new Polygon(
                 262, 474,
                 263, 476,
@@ -2718,20 +2503,14 @@ public class HelloController {
 
         );
 
-        france.setFill(Color.TRANSPARENT);  // niewidoczne
-        france.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                france,
+                () -> openFranceView()
+        );
 
-        // 3) Efekt podświetlenia
-        france.setOnMouseEntered(e ->
-                france.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        france.setOnMouseExited(e ->
-                france.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(france);
 
-        // Polygon iceland
+        // Polygon britain
         Polygon britain = new Polygon(
                 224, 372,
                 228, 373,
@@ -2871,17 +2650,11 @@ public class HelloController {
 
         );
 
-        britain.setFill(Color.TRANSPARENT);  // niewidoczne
-        britain.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                britain,
+                () -> openBritainView()
+        );
 
-        // 3) Efekt podświetlenia
-        britain.setOnMouseEntered(e ->
-                britain.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        britain.setOnMouseExited(e ->
-                britain.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(britain);
 
         // Polygon iceland
@@ -2987,25 +2760,38 @@ public class HelloController {
 
         );
 
-        iceland.setFill(Color.TRANSPARENT);  // niewidoczne
-        iceland.setStroke(Color.TRANSPARENT);
+        setupCountryPolygon(
+                iceland,
+                () -> openIcelandView()
+        );
 
-        // 3) Efekt podświetlenia
-        iceland.setOnMouseEntered(e ->
-                iceland.setFill(Color.color(1, 1, 1, 0.3))); // półprzezroczysta poświata
-
-        iceland.setOnMouseExited(e ->
-                iceland.setFill(Color.TRANSPARENT));
-
-        // 4) Dodanie polygonu nad mapą
         mapPane.getChildren().add(iceland);
     }
 
-    private void openCountryMap(String fileName)
-    {
-        Image image = new Image(getClass().getResourceAsStream("/" + fileName));
-        ImageView imageView = new ImageView(image);
 
+    // konfiguracja dla kazdego kraju
+    private void setupCountryPolygon(Polygon polygon, Runnable onClick) {
+
+        polygon.setFill(Color.TRANSPARENT);
+        polygon.setStroke(Color.TRANSPARENT);
+
+        polygon.setOnMouseEntered(e ->
+                polygon.setFill(Color.color(1, 1, 1, 0.3)));
+
+        polygon.setOnMouseExited(e ->
+                polygon.setFill(Color.TRANSPARENT));
+
+        polygon.setOnMouseClicked(e -> onClick.run());
+    }
+
+    // mapka danego kraju
+    private void openCountryMap(String imageName) {
+
+        Image image = new Image(
+                getClass().getResourceAsStream("/" + imageName)
+        );
+
+        ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(900);
         imageView.setFitHeight(600);
@@ -3014,9 +2800,692 @@ public class HelloController {
         Scene scene = new Scene(root, 900, 600);
 
         Stage stage = new Stage();
-        stage.setTitle(fileName);
+        stage.setTitle(imageName);
         stage.setScene(scene);
         stage.show();
     }
 
+    private void openPolandView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/poland-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Polska");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openGermanyView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/germany-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Niemcy");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openDenmarkView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/denmark-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Dania");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openLithuaniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/lithuania-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Litwa");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openRussiaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/russia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Rosja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBelarusView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/belarus-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Białoruś");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openFinlandView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/finland-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Finlandia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSwedenView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/sweden-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Szwecja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openCzechiaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/czechia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Czechy");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSlovakiaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/slovakia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Słowacja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openAustriaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/austria-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Austria");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSwitzerlandView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/switzerland-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Szwajcaria");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openNetherlandsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/netherlands-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Holandia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBelgiumView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/belgium-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Belgia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openLuxemburgView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/luxemburg-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Luksemburg");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openHungaryView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/hungary-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Węgry");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSloveniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/slovenia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Słowenia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openUkraineView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/ukraine-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Ukraina");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openMoldovaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/moldova-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Mołdawia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openEstoniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/estonia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Estonia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openLatviaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/latvia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Łotwa");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openNorwayView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/norway-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Norwegia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openCroatiaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/croatia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Chorwacja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBosniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/bosnia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Bośnia i Hercegowina");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openMontenegroView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/montenegro-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Czarnogóra");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openKosovoView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/kosovo-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Kosowo");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSerbiaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/serbia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Serbia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openAlbaniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/albania-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Albania");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openMacedoniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/macedonia-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Macedonia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openRomaniaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/romania-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Rumunia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openGreeceView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/greece-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Grecja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBulgariaView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/bulgaria-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Bułgaria");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openTurkeyView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/turkey-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Turcja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSpainView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/spain-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Hiszpania");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openPortugalView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/portugal-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Portugalia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openIrelandView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/ireland-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Irlandia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openItalyView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/italy-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Włochy");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openFranceView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/france-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Francja");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBritainView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/britain-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Wielka Brytania");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openIcelandView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/iceland-view.fxml")
+            );
+
+            Scene scene = new Scene(loader.load(), 1200, 600);
+            Stage stage = new Stage();
+            stage.setTitle("Islandia");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
+
+

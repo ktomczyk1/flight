@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.flightbuddy.flightbuddy.RomaniaController"
+            prefWidth="1200"
+            prefHeight="600">
+
+    <!-- MAPA ROSJI -->
+    <center>
+        <ImageView fx:id="mapImage"
+                   fitWidth="900"
+                   fitHeight="600"
+                   preserveRatio="true"/>
+    </center>
+
+    <!-- INFO -->
+    <right>
+        <VBox fx:id="infoPane"
+              prefWidth="300"
+              spacing="10"
+              style="-fx-padding: 15;" />
+    </right>
+
+</BorderPane>

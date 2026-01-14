@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.flightbuddy.flightbuddy.InfoPanelController"
+      fx:id="infoPane"
+      prefWidth="300"
+      spacing="10"
+      style="-fx-padding: 15;"
+      visible="false"
+      managed="false">
+
+    <Label fx:id="titleLabel"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <TextArea fx:id="descriptionArea"
+              wrapText="true"
+              editable="false"/>
+</VBox>
