@@ -6,6 +6,7 @@ com\flightbuddy\flightbuddy\SpainController.class
 com\flightbuddy\flightbuddy\UkraineController.class
 com\flightbuddy\flightbuddy\InfoPanelController.class
 com\flightbuddy\flightbuddy\MontenegroController.class
+com\flightbuddy\flightbuddy\StartController$User.class
 com\flightbuddy\flightbuddy\PolandController.class
 com\flightbuddy\flightbuddy\LuxemburgController.class
 com\flightbuddy\flightbuddy\SwedenController.class
@@ -15,6 +16,7 @@ com\flightbuddy\flightbuddy\CroatiaController.class
 com\flightbuddy\flightbuddy\NetherlandsController.class
 com\flightbuddy\flightbuddy\BosniaController.class
 com\flightbuddy\flightbuddy\NorwayController.class
+com\flightbuddy\flightbuddy\User.class
 com\flightbuddy\flightbuddy\KosovoController.class
 com\flightbuddy\flightbuddy\EstoniaController.class
 com\flightbuddy\flightbuddy\IcelandController.class
@@ -42,4 +44,5 @@ com\flightbuddy\flightbuddy\FlightsController.class
 com\flightbuddy\flightbuddy\MoldovaController.class
 com\flightbuddy\flightbuddy\BulgariaController.class
 com\flightbuddy\flightbuddy\Airport.class
+com\flightbuddy\flightbuddy\StartController.class
 com\flightbuddy\flightbuddy\RomaniaController.class
