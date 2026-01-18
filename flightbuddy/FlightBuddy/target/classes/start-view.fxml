@@ -24,16 +24,23 @@
             </ImageView>
             <Label text="FlightBuddy" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-            <!-- Rozciągnięcie HBox, by przyciski były po prawej -->
+            <!-- Region do rozciągania przed przyciskiem Mapa -->
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Przyciski logowania/rejestracji -->
+            <!-- Przycisk Mapa na środku -->
+            <Button text="Mapa" fx:id="showMapButton" prefWidth="100"/>
+
+            <!-- Kolejny region do rozciągania po przycisku Mapa -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Przyciski logowania/rejestracji po prawej -->
             <Button text="Zaloguj" fx:id="showLoginButton" prefWidth="100"/>
             <Button text="Utwórz konto" fx:id="showRegisterButton" prefWidth="120"/>
 
             <!-- Label pokazujący zalogowanego użytkownika -->
             <Label fx:id="loggedInLabel" text="" style="-fx-font-weight: bold; -fx-text-fill: green;"/>
         </HBox>
+
     </top>
 
     <!-- ŚRODEK: Wyszukiwarka + formularze + wyniki -->
@@ -46,8 +53,10 @@
                     <TextField fx:id="fromField" prefWidth="120"/>
                     <Label text="Dokąd:"/>
                     <TextField fx:id="toField" prefWidth="120"/>
-                    <Label text="Godzina:"/>
-                    <TextField fx:id="timeField" promptText="HH:mm" prefWidth="80"/>
+                    <Label text="Od:"/>
+                    <DatePicker fx:id="fromDatePicker" prefWidth="140"/>
+                    <Label text="Do:"/>
+                    <DatePicker fx:id="toDatePicker" prefWidth="140"/>
                     <Button text="Szukaj" fx:id="searchButton" prefWidth="100"/>
                 </HBox>
 
