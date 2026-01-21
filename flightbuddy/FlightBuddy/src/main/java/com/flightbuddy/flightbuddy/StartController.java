@@ -67,8 +67,8 @@ public class StartController {
     @FXML private ListView<String> toSuggestions;
 
     // ===================== DANE =====================
-    private final List<User> users = new ArrayList<>();
-    private User loggedInUser = null;
+    private final UserService userService = new UserService();
+    private User loggedInUser;
 
     private final List<String> cities = List.of(
             "Warszawa (WAW)",
@@ -208,29 +208,119 @@ public class StartController {
 
 
     // ===================== LOGOWANIE =====================
+    @FXML
     private void handleLogin() {
-        for (User u : users) {
-            if (u.email.equals(loginEmailField.getText())
-                    && u.password.equals(loginPasswordField.getText())) {
-                loggedInUser = u;
-                loggedInLabel.setText("Zalogowano: " + u.firstName);
-                loginPane.setVisible(false);
-                return;
-            }
+
+        String email = loginEmailField.getText();
+        String password = loginPasswordField.getText();
+
+        User user = userService.login(email, password);
+
+        if (user == null) {
+            showAlert("Błąd", "Niepoprawny email lub hasło");
+            return;
         }
-        loginMessageLabel.setText("Błędne dane");
+
+        loggedInUser = user;
+        loggedInLabel.setText("Zalogowano: " + user.getFirstName());
+
+        showLoginButton.setText("Wyloguj");
+        showLoginButton.setOnAction(e -> handleLogout());
+        showRegisterButton.setDisable(true);
+
+        resetLoginFields();
+        goToStartPage();
+
+        loginEmailField.clear();
+        loginPasswordField.clear();
+        loginPane.setVisible(false);
+
+        if (user.getRole() == User.Role.ADMIN) {
+            showAlert("Admin", "Zalogowano jako administrator");
+            // tu później podłączymy admin panel
+        }
     }
 
+    private void handleLogout() {
+        loggedInUser = null;
+        loggedInLabel.setText("");
+
+        // przywróć przyciski do stanu początkowego
+        showLoginButton.setText("Zaloguj");
+        showLoginButton.setOnAction(e -> loginPane.setVisible(true));
+        showRegisterButton.setDisable(false);
+    }
+
+
+
+    @FXML
     private void handleRegister() {
-        users.add(new User(
-                regFirstNameField.getText(),
-                regLastNameField.getText(),
-                regEmailField.getText(),
-                regPhoneField.getText(),
-                regPasswordField.getText()
-        ));
+
+        String firstName = regFirstNameField.getText();
+        String lastName = regLastNameField.getText();
+        String email = regEmailField.getText();
+        String phone = regPhoneField.getText();
+        String password = regPasswordField.getText();
+
+        if (firstName.isEmpty() || lastName.isEmpty()
+                || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
+            showAlert("Błąd", "Wszystkie pola muszą być wypełnione");
+            return;
+        }
+
+        if (!phone.matches("\\d{9}")) {
+            showAlert("Błąd", "Numer telefonu musi mieć dokładnie 9 cyfr");
+            return;
+        }
+
+        if (password.length() < 4) {
+            showAlert("Błąd", "Hasło musi mieć co najmniej 4 znaki");
+            return;
+        }
+
+
+        User user = new User(
+                firstName,
+                lastName,
+                email,
+                phone,
+                password,
+                User.Role.USER
+        );
+
+        if (!userService.register(user)) {
+            showAlert("Błąd", "Konto z takim emailem lub numerem telefonu już istnieje");
+            return;
+        }
+
+        showAlert("Sukces", "Konto zostało utworzone");
+
+        resetRegisterFields();
+        goToStartPage();
+    }
+
+    private void resetLoginFields() {
+        loginEmailField.clear();
+        loginPasswordField.clear();
+        loginMessageLabel.setText("");
+    }
+
+    private void resetRegisterFields() {
+        regFirstNameField.clear();
+        regLastNameField.clear();
+        regEmailField.clear();
+        regPhoneField.clear();
+        regPasswordField.clear();
+        registerMessageLabel.setText("");
+    }
+
+    private void goToStartPage() {
+        loginPane.setVisible(false);
         registerPane.setVisible(false);
     }
+
+
+
 
     // ===================== SEARCH =====================
     private void handleSearch() {
@@ -298,12 +388,12 @@ public class StartController {
 
 
     // ===================== USER =====================
-    private static class User {
+    /* private static class User {
         String firstName, lastName, email, phone, password;
         User(String f, String l, String e, String p, String pw) {
             firstName = f; lastName = l; email = e; phone = p; password = pw;
         }
-    }
+    } */
 
     private void showRoundTripResult(RoundTripResult result) {
 
@@ -492,8 +582,13 @@ public class StartController {
         showAlert(Alert.AlertType.INFORMATION, "Rezerwacja", summary);
     }
 
-
-
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 
 }
