@@ -52,7 +52,7 @@
 
                     <!-- SKĄD -->
                     <VBox spacing="4">
-                        <Label text="Skąd:"/>
+                        <Label text="Wylot:"/>
                         <TextField fx:id="fromField" prefWidth="160"/>
                         <ListView fx:id="fromSuggestions"
                                   maxHeight="120"
@@ -62,7 +62,7 @@
 
                     <!-- DOKĄD -->
                     <VBox spacing="4">
-                        <Label text="Dokąd:"/>
+                        <Label text="Przylot:"/>
                         <TextField fx:id="toField" prefWidth="160"/>
                         <ListView fx:id="toSuggestions"
                                   maxHeight="120"
@@ -72,13 +72,13 @@
 
                     <!-- OD -->
                     <VBox spacing="4">
-                        <Label text="Od:"/>
+                        <Label text="Data wylotu:"/>
                         <DatePicker fx:id="fromDatePicker" prefWidth="140"/>
                     </VBox>
 
                     <!-- DO -->
                     <VBox spacing="4">
-                        <Label text="Do:"/>
+                        <Label text="Data przylotu:"/>
                         <DatePicker fx:id="toDatePicker" prefWidth="140"/>
                     </VBox>
 

@@ -261,13 +261,37 @@ public class StartController {
 
     private void handleLogout() {
         loggedInUser = null;
-        loggedInLabel.setText("");
+        loggedInLabel.setText("Nie zalogowano");
 
-        // przywróć przyciski do stanu początkowego
+        // Przywrócenie przycisków logowania/rejestracji
+        showLoginButton.setDisable(false);
         showLoginButton.setText("Zaloguj");
         showLoginButton.setOnAction(e -> loginPane.setVisible(true));
         showRegisterButton.setDisable(false);
+
+        // Wyczyszczenie pól logowania/rejestracji
+        loginEmailField.clear();
+        loginPasswordField.clear();
+        loginMessageLabel.setText("");
+
+        regFirstNameField.clear();
+        regLastNameField.clear();
+        regEmailField.clear();
+        regPhoneField.clear();
+        regPasswordField.clear();
+        registerMessageLabel.setText("");
+
+        // Wyczyszczenie wyszukiwarki
+        fromField.clear();
+        toField.clear();
+        fromDatePicker.setValue(null);
+        toDatePicker.setValue(null);
+
+        // Ukrycie wyników wyszukiwania
+        searchResultsPane.getChildren().clear();
+        bookButton.setDisable(true);
     }
+
 
 
 
