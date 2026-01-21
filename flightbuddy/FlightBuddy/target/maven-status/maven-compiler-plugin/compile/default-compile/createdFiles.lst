@@ -5,6 +5,7 @@ com\flightbuddy\flightbuddy\CzechiaController.class
 com\flightbuddy\flightbuddy\UserService.class
 com\flightbuddy\flightbuddy\TurkeyController.class
 com\flightbuddy\flightbuddy\SpainController.class
+com\flightbuddy\flightbuddy\Booking.class
 com\flightbuddy\flightbuddy\UkraineController.class
 com\flightbuddy\flightbuddy\InfoPanelController.class
 com\flightbuddy\flightbuddy\MontenegroController.class

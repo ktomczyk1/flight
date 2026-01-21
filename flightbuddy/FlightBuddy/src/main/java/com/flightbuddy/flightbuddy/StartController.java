@@ -31,6 +31,7 @@ public class StartController {
     private VBox selectedInboundBox = null;
 
     @FXML private Button bookButton; // dodamy w FXML
+    @FXML private Button showBookingsButton;
 
     // ===================== GLOBAL =====================
     private FlightService flightService;
@@ -154,6 +155,8 @@ public class StartController {
     @FXML
     private void initialize() {
         bookButton.setOnAction(e -> handleBooking());
+        showBookingsButton.setOnAction(e -> openBookingsWindow());
+        showBookingsButton.setVisible(false);
 
         // 🔑 TWORZYMY ŚWIAT LOTÓW – RAZ
         RouteGenerator generator = new RouteGenerator();
@@ -187,6 +190,8 @@ public class StartController {
             if (loggedInUser != null && loggedInUser.getRole() == User.Role.ADMIN) {
                 showAdminToolsButton.setVisible(true);
             }
+
+            showBookingsButton.setVisible(true);
         });
 
         registerButton.setOnAction(e -> handleRegister());
@@ -245,6 +250,7 @@ public class StartController {
         showLoginButton.setText("Wyloguj");
         showLoginButton.setOnAction(e -> handleLogout());
         showRegisterButton.setDisable(true);
+        showBookingsButton.setVisible(true);
 
         resetLoginFields();
         goToStartPage();
@@ -255,7 +261,6 @@ public class StartController {
 
         if (user.getRole() == User.Role.ADMIN) {
             showAlert("Admin", "Zalogowano jako administrator");
-            // tu później podłączymy admin panel
         }
     }
 
@@ -290,6 +295,13 @@ public class StartController {
         // Ukrycie wyników wyszukiwania
         searchResultsPane.getChildren().clear();
         bookButton.setDisable(true);
+
+        // Ukrycie zarezerwowanych lotów
+        showBookingsButton.setVisible(false);
+        // showBookingsButton.setOnAction(e -> openBookingsWindow());
+
+        // Ukrycie narzędzi administratora
+        showAdminToolsButton.setVisible(false);
     }
 
 
@@ -582,22 +594,36 @@ public class StartController {
 
         int total = selectedOutbound.getPrice() + selectedInbound.getPrice();
 
+        // Sprawdzenie, czy taki sam lot już istnieje
+        /* boolean alreadyBooked = loggedInUser.getBookings().stream()
+                .anyMatch(b -> b.getOutbound().equals(selectedOutbound)
+                        && b.getInbound().equals(selectedInbound));
+
+        if (alreadyBooked) {
+            showAlert("Błąd", "Ten lot został już zarezerwowany!");
+            return;
+        } */
+
+        // Tworzymy rezerwację
+        Booking booking = new Booking(selectedOutbound, selectedInbound);
+        loggedInUser.addBooking(booking);
+
         String summary = """
-            WYBRANE LOTY:
+        WYBRANE LOTY:
 
-            Wylot:
-            %s %s → %s
-            Data: %s
-            Cena: %d zł
+        Wylot:
+        %s %s → %s
+        Data: %s
+        Cena: %d zł
 
-            Powrót:
-            %s %s → %s
-            Data: %s
-            Cena: %d zł
+        Powrót:
+        %s %s → %s
+        Data: %s
+        Cena: %d zł
 
-            -------------------------
-            Razem: %d zł
-            """.formatted(
+        -------------------------
+        Razem: %d zł
+        """.formatted(
                 selectedOutbound.getTime(),
                 selectedOutbound.getFrom().getDisplayName(),
                 selectedOutbound.getTo().getDisplayName(),
@@ -609,13 +635,15 @@ public class StartController {
                 selectedInbound.getTo().getDisplayName(),
                 selectedInbound.getDate(),
                 selectedInbound.getPrice(),
-
                 total
         );
 
         showAlert(Alert.AlertType.INFORMATION, "Rezerwacja", summary);
+
     }
 
+
+    // Pop-upy
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -623,6 +651,55 @@ public class StartController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    // Zarezerwowane loty
+    private void openBookingsWindow() {
+        if (loggedInUser == null) return;
+
+        Stage stage = new Stage();
+        stage.setTitle("Twoje loty");
+
+        VBox root = new VBox(10);
+        root.setPadding(new Insets(10));
+
+        if (loggedInUser.getBookings().isEmpty()) {
+            root.getChildren().add(new Label("Brak rezerwacji"));
+        } else {
+            for (Booking b : loggedInUser.getBookings()) {
+                VBox flightBox = new VBox(5);
+
+                Label outboundLabel = new Label(
+                        "Wylot: " + b.getOutbound().getDate() + " "
+                                + b.getOutbound().getTime() + " "
+                                + b.getOutbound().getFrom().getDisplayName()
+                                + " → " + b.getOutbound().getTo().getDisplayName()
+                );
+
+                Label inboundLabel = new Label(
+                        "Powrót: " + b.getInbound().getDate() + " "
+                                + b.getInbound().getTime() + " "
+                                + b.getInbound().getFrom().getDisplayName()
+                                + " → " + b.getInbound().getTo().getDisplayName()
+                );
+
+                flightBox.getChildren().addAll(outboundLabel, inboundLabel);
+                flightBox.setStyle("""
+                -fx-padding: 8;
+                -fx-border-color: lightgray;
+                -fx-background-color: #f9f9f9;
+                -fx-border-radius: 6;
+                -fx-background-radius: 6;
+            """);
+
+                root.getChildren().add(flightBox);
+            }
+        }
+
+        Scene scene = new Scene(root, 400, 400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
     // Panel admina
     private void openAdminToolsWindow() {

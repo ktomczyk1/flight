@@ -1,5 +1,8 @@
 package com.flightbuddy.flightbuddy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User
 {
     public enum Role {USER, ADMIN}
@@ -10,6 +13,8 @@ public class User
     private String phone;
     private String password;
     private Role role;
+
+    private List<Booking> bookings = new ArrayList<>(); // Zarezerwowane loty
 
     public User(String firstName, String lastName,
                 String email, String phone,
@@ -23,6 +28,9 @@ public class User
         this.role = role;
     }
 
+    public void addBooking(Booking booking) {bookings.add(booking);}
+
+    public List<Booking> getBookings() {return bookings;}
     public String getFirstName() {return firstName;}
     public String getLastName() {return lastName;}
     public String getEmail() {return email;}

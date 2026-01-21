@@ -28,8 +28,9 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
+            <Button fx:id="showBookingsButton" text="Twoje loty" visible="false" />
             <Button text="Mapa" fx:id="showMapButton" prefWidth="100"/>
-            <Button fx:id="showAdminToolsButton" text="Narzędzia Administratora" visible="false"/>
+            <Button fx:id="showAdminToolsButton" text="Narzędzia administratora" />
 
             <Region HBox.hgrow="ALWAYS"/>
 
