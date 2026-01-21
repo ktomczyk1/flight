@@ -5,7 +5,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -13,87 +12,164 @@
             prefWidth="1200"
             prefHeight="600">
 
-    <!-- GÓRA: Logo i przyciski logowania/rejestracji -->
+    <!-- GÓRA -->
     <top>
-        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #f0f0f0;">
-            <!-- Logo -->
+        <HBox spacing="20" alignment="CENTER_LEFT"
+              style="-fx-padding: 10; -fx-background-color: #f0f0f0;">
+
             <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
                 <image>
                     <Image url="@logo.png"/>
                 </image>
             </ImageView>
-            <Label text="FlightBuddy" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-            <!-- Region do rozciągania przed przyciskiem Mapa -->
+            <Label text="FlightBuddy"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Przycisk Mapa na środku -->
             <Button text="Mapa" fx:id="showMapButton" prefWidth="100"/>
 
-            <!-- Kolejny region do rozciągania po przycisku Mapa -->
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Przyciski logowania/rejestracji po prawej -->
             <Button text="Zaloguj" fx:id="showLoginButton" prefWidth="100"/>
             <Button text="Utwórz konto" fx:id="showRegisterButton" prefWidth="120"/>
 
-            <!-- Label pokazujący zalogowanego użytkownika -->
-            <Label fx:id="loggedInLabel" text="" style="-fx-font-weight: bold; -fx-text-fill: green;"/>
+            <Label fx:id="loggedInLabel"
+                   style="-fx-font-weight: bold; -fx-text-fill: green;"/>
         </HBox>
-
     </top>
 
-    <!-- ŚRODEK: Wyszukiwarka + formularze + wyniki -->
+    <!-- ŚRODEK -->
     <center>
         <StackPane fx:id="mainStack" style="-fx-padding: 20;">
-            <!-- 1. Wyszukiwarka lotów -->
-            <VBox fx:id="searchPane" spacing="10" alignment="TOP_CENTER">
-                <HBox spacing="10" alignment="CENTER">
-                    <Label text="Skąd:"/>
-                    <TextField fx:id="fromField" prefWidth="120"/>
-                    <Label text="Dokąd:"/>
-                    <TextField fx:id="toField" prefWidth="120"/>
-                    <Label text="Od:"/>
-                    <DatePicker fx:id="fromDatePicker" prefWidth="140"/>
-                    <Label text="Do:"/>
-                    <DatePicker fx:id="toDatePicker" prefWidth="140"/>
-                    <Button text="Szukaj" fx:id="searchButton" prefWidth="100"/>
+
+            <!-- WYSZUKIWARKA -->
+            <VBox fx:id="searchPane" spacing="15" alignment="TOP_CENTER">
+
+                <HBox spacing="15" alignment="CENTER">
+
+                    <!-- SKĄD -->
+                    <VBox spacing="4">
+                        <Label text="Skąd:"/>
+                        <TextField fx:id="fromField" prefWidth="160"/>
+                        <ListView fx:id="fromSuggestions"
+                                  maxHeight="120"
+                                  visible="false"
+                                  managed="false"/>
+                    </VBox>
+
+                    <!-- DOKĄD -->
+                    <VBox spacing="4">
+                        <Label text="Dokąd:"/>
+                        <TextField fx:id="toField" prefWidth="160"/>
+                        <ListView fx:id="toSuggestions"
+                                  maxHeight="120"
+                                  visible="false"
+                                  managed="false"/>
+                    </VBox>
+
+                    <!-- OD -->
+                    <VBox spacing="4">
+                        <Label text="Od:"/>
+                        <DatePicker fx:id="fromDatePicker" prefWidth="140"/>
+                    </VBox>
+
+                    <!-- DO -->
+                    <VBox spacing="4">
+                        <Label text="Do:"/>
+                        <DatePicker fx:id="toDatePicker" prefWidth="140"/>
+                    </VBox>
+
+                    <!-- SZUKAJ -->
+                    <VBox spacing="4" alignment="BOTTOM_CENTER">
+                        <Label text=""/>
+                        <Button text="Szukaj"
+                                fx:id="searchButton"
+                                prefWidth="100"/>
+                        <Button text="Rezerwuj" fx:id="bookButton" disable="true" prefWidth="100"/>
+
+                    </VBox>
+
                 </HBox>
 
-                <!-- Miejsce na wyniki wyszukiwania lotów -->
-                <GridPane fx:id="searchResultsPane" hgap="10" vgap="10" alignment="CENTER"/>
+                <!-- WYNIKI -->
+                <GridPane fx:id="searchResultsPane"
+                          hgap="10"
+                          vgap="10"
+                          alignment="CENTER"/>
+
             </VBox>
 
-            <!-- 2. Formularz logowania (na start niewidoczny) -->
-            <VBox fx:id="loginPane" spacing="10" alignment="CENTER" visible="false"
-                  style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: gray; -fx-border-width: 1;">
-                <Label text="Logowanie" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <!-- LOGOWANIE -->
+            <VBox fx:id="loginPane"
+                  spacing="10"
+                  alignment="CENTER"
+                  visible="false"
+                  style="-fx-background-color: white;
+                         -fx-padding: 20;
+                         -fx-border-color: gray;
+                         -fx-border-width: 1;">
+
+                <Label text="Logowanie"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
                 <Label text="Email:"/>
                 <TextField fx:id="loginEmailField" prefWidth="200"/>
+
                 <Label text="Hasło:"/>
                 <PasswordField fx:id="loginPasswordField" prefWidth="200"/>
-                <Button text="Zaloguj" fx:id="loginButton" prefWidth="100"/>
-                <Label fx:id="loginMessageLabel" style="-fx-text-fill: red;"/>
-                <Button text="Zamknij" fx:id="closeLoginButton" prefWidth="80"/>
+
+                <Button text="Zaloguj"
+                        fx:id="loginButton"
+                        prefWidth="100"/>
+
+                <Label fx:id="loginMessageLabel"
+                       style="-fx-text-fill: red;"/>
+
+                <Button text="Zamknij"
+                        fx:id="closeLoginButton"
+                        prefWidth="80"/>
             </VBox>
 
-            <!-- 3. Formularz rejestracji (na start niewidoczny) -->
-            <VBox fx:id="registerPane" spacing="10" alignment="CENTER" visible="false"
-                  style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: gray; -fx-border-width: 1;">
-                <Label text="Rejestracja" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <!-- REJESTRACJA -->
+            <VBox fx:id="registerPane"
+                  spacing="10"
+                  alignment="CENTER"
+                  visible="false"
+                  style="-fx-background-color: white;
+                         -fx-padding: 20;
+                         -fx-border-color: gray;
+                         -fx-border-width: 1;">
+
+                <Label text="Rejestracja"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
                 <Label text="Imię:"/>
                 <TextField fx:id="regFirstNameField" prefWidth="200"/>
+
                 <Label text="Nazwisko:"/>
                 <TextField fx:id="regLastNameField" prefWidth="200"/>
+
                 <Label text="Email:"/>
                 <TextField fx:id="regEmailField" prefWidth="200"/>
+
                 <Label text="Telefon:"/>
                 <TextField fx:id="regPhoneField" prefWidth="200"/>
+
                 <Label text="Hasło:"/>
                 <PasswordField fx:id="regPasswordField" prefWidth="200"/>
-                <Button text="Utwórz konto" fx:id="registerButton" prefWidth="120"/>
-                <Label fx:id="registerMessageLabel" style="-fx-text-fill: red;"/>
-                <Button text="Zamknij" fx:id="closeRegisterButton" prefWidth="80"/>
+
+                <Button text="Utwórz konto"
+                        fx:id="registerButton"
+                        prefWidth="120"/>
+
+                <Label fx:id="registerMessageLabel"
+                       style="-fx-text-fill: red;"/>
+
+                <Button text="Zamknij"
+                        fx:id="closeRegisterButton"
+                        prefWidth="80"/>
             </VBox>
 
         </StackPane>

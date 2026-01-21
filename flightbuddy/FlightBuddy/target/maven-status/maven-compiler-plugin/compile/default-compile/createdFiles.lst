@@ -1,4 +1,5 @@
 com\flightbuddy\flightbuddy\BelgiumController.class
+com\flightbuddy\flightbuddy\Flight.class
 com\flightbuddy\flightbuddy\GreeceController.class
 com\flightbuddy\flightbuddy\CzechiaController.class
 com\flightbuddy\flightbuddy\TurkeyController.class
@@ -7,13 +8,16 @@ com\flightbuddy\flightbuddy\UkraineController.class
 com\flightbuddy\flightbuddy\InfoPanelController.class
 com\flightbuddy\flightbuddy\MontenegroController.class
 com\flightbuddy\flightbuddy\StartController$User.class
+com\flightbuddy\flightbuddy\AutoCompleteSupport.class
 com\flightbuddy\flightbuddy\PolandController.class
+com\flightbuddy\flightbuddy\RoundTripResult.class
 com\flightbuddy\flightbuddy\LuxemburgController.class
 com\flightbuddy\flightbuddy\SwedenController.class
 com\flightbuddy\flightbuddy\LithuaniaController.class
 com\flightbuddy\flightbuddy\RussiaController.class
 com\flightbuddy\flightbuddy\CroatiaController.class
 com\flightbuddy\flightbuddy\NetherlandsController.class
+com\flightbuddy\flightbuddy\FlightService.class
 com\flightbuddy\flightbuddy\BosniaController.class
 com\flightbuddy\flightbuddy\NorwayController.class
 com\flightbuddy\flightbuddy\User.class
@@ -21,6 +25,7 @@ com\flightbuddy\flightbuddy\KosovoController.class
 com\flightbuddy\flightbuddy\EstoniaController.class
 com\flightbuddy\flightbuddy\IcelandController.class
 com\flightbuddy\flightbuddy\FinlandController.class
+com\flightbuddy\flightbuddy\RouteGenerator.class
 com\flightbuddy\flightbuddy\SlovakiaController.class
 com\flightbuddy\flightbuddy\HungaryController.class
 com\flightbuddy\flightbuddy\SwitzerlandController.class
@@ -31,6 +36,7 @@ com\flightbuddy\flightbuddy\LatviaController.class
 com\flightbuddy\flightbuddy\GermanyController.class
 com\flightbuddy\flightbuddy\CountryInfoService.class
 com\flightbuddy\flightbuddy\SloveniaController.class
+com\flightbuddy\flightbuddy\AutoCompleteSupport$1.class
 com\flightbuddy\flightbuddy\FranceController.class
 com\flightbuddy\flightbuddy\SerbiaController.class
 com\flightbuddy\flightbuddy\CountryInfo.class
@@ -46,3 +52,4 @@ com\flightbuddy\flightbuddy\BulgariaController.class
 com\flightbuddy\flightbuddy\Airport.class
 com\flightbuddy\flightbuddy\StartController.class
 com\flightbuddy\flightbuddy\RomaniaController.class
+com\flightbuddy\flightbuddy\Route.class

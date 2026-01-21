@@ -1,86 +1,160 @@
 package com.flightbuddy.flightbuddy;
 
 public enum Airport {
-    WAW("Warszawa (WAW)"),
-    GDN("Gdańsk (GDN)"),
-    KRK("Kraków (KRK)"),
-    KTW("Katowice (KTW)"),
-    FRA("Frankfurt (FRA)"),
-    BER("Berlin (BER)"),
-    HAM("Hamburg (HAM)"),
-    MUC("Monachium (MUC)"),
-    CPH("Kopenhaga (CPH"),
-    VNO("Wilno (VNO)"),
-    SMO("Moskwa (SMO"),
-    LED("Petersburg (LED)"),
-    VVO("Władywostok (VVO)"),
-    MSQ("Mińsk (MSQ"),
-    OUL("Oulu (OUL)"),
-    HEL("Helsinki (HEL)"),
-    MMX("Malmo (MMX"),
-    ARN("Sztokholm (ARN)"),
-    PRG("Praga (PRG)"),
-    BTS("Bratysława (BTS)"),
-    INN("Innsbruck (INN)"),
-    VIE("Wiedeń (VIE)"),
-    ZRH("Zurych (ZRH)"),
-    AMS("Amsterdam (AMS"),
-    BRU("Bruksela (BRU)"),
-    LUX("Luksemburg (LUX)"),
-    BUD("Budapeszt (BUD)"),
-    LJU("Lublana (LJU)"),
-    RMO("Kiszyniów (RMO)"),
-    TTL("Tallin (TTL)"),
-    RIX("Ryga (RIX)"),
-    OSL("Oslo (OSL)"),
-    BGO("Bergen (BGO)"),
-    ZAG("Zagrzeb (ZAG)"),
-    SPU("Split (SPU)"),
-    SJJ("Sarajewo (SJJ)"),
-    TGD("Podgorica (TGD)"),
-    PRN("Prisztina (PRN)"),
-    BEG("Belgrad (BEG)"),
-    TIA("Tirana (TIA)"),
-    SKP("Skopje (SKP)"),
-    OTP("Bukareszt (OTP"),
-    IAS("Jassy (IAS)"),
-    SBZ("Sybin (SBZ)"),
-    ATH("Ateny (ATH)"),
-    CHQ("Chania (CHQ)"),
-    SKG("Saloniki (SKG)"),
-    BOJ("Burgas (BOJ)"),
-    SOF("Sofia (SOF)"),
-    IST("Stambuł (IST)"),
-    AYT("Antalya (AYT)"),
-    ESB("Ankara (ESB)"),
-    ADB("Izmir (ADB)"),
-    MAD("Madryt (MAD)"),
-    AGP("Malaga (AGP)"),
-    BCN("Barcelona (BCN)"),
-    PMI("Palma de Mallorca (PMI)"),
-    LIS("Lizbona (LIS)"),
-    OPO("Porto (OPO)"),
-    DUB("Dublin (DUB)"),
-    MXP("Mediolan (MXP)"),
-    FCO("Rzym (FCO)"),
-    VCE("Wenecja (VCE)"),
-    BLQ("Bolonia (BLQ)"),
-    CDG("Paryż (CDG)"),
-    MRS("Marsylia (MRS)"),
-    NCE("Nicea (NCE)"),
-    LHR("Londyn (LHR)"),
-    MAN("Manchester (MAN)"),
-    EDI("Edynburg (EDI)"),
-    RKV("Reykjavik (RKV)");
 
+    // POLSKA
+    WAW("Warszawa (WAW)", "Polska"),
+    GDN("Gdańsk (GDN)", "Polska"),
+    KRK("Kraków (KRK)", "Polska"),
+    KTW("Katowice (KTW)", "Polska"),
+
+    // NIEMCY
+    FRA("Frankfurt (FRA)", "Niemcy"),
+    BER("Berlin (BER)", "Niemcy"),
+    HAM("Hamburg (HAM)", "Niemcy"),
+    MUC("Monachium (MUC)", "Niemcy"),
+
+    // DANIA
+    CPH("Kopenhaga (CPH)", "Dania"),
+
+    // LITWA
+    VNO("Wilno (VNO)", "Litwa"),
+
+    // ROSJA
+    SVO("Moskwa (SVO)", "Rosja"),
+    LED("Petersburg (LED)", "Rosja"),
+    VVO("Władywostok (VVO)", "Rosja"),
+
+    // BIAŁORUŚ
+    MSQ("Mińsk (MSQ)", "Białoruś"),
+
+    // FINLANDIA
+    OUL("Oulu (OUL)", "Finlandia"),
+    HEL("Helsinki (HEL)", "Finlandia"),
+
+    // SZWECJA
+    MMX("Malmo (MMX)", "Szwecja"),
+    ARN("Sztokholm (ARN)", "Szwecja"),
+
+    // CZECHY / SŁOWACJA / AUSTRIA
+    PRG("Praga (PRG)", "Czechy"),
+    BTS("Bratysława (BTS)", "Słowacja"),
+    INN("Innsbruck (INN)", "Austria"),
+    VIE("Wiedeń (VIE)", "Austria"),
+
+    // SZWAJCARIA
+    ZRH("Zurych (ZRH)", "Szwajcaria"),
+
+    // BENELUX
+    AMS("Amsterdam (AMS)", "Holandia"),
+    BRU("Bruksela (BRU)", "Belgia"),
+    LUX("Luksemburg (LUX)", "Luksemburg"),
+
+    // WĘGRY / SŁOWENIA / MOŁDAWIA
+    BUD("Budapeszt (BUD)", "Węgry"),
+    LJU("Lublana (LJU)", "Słowenia"),
+    RMO("Kiszyniów (RMO)", "Mołdawia"),
+
+    // KRAJE BAŁTYCKIE
+    TTL("Tallinn (TTL)", "Estonia"),
+    RIX("Ryga (RIX)", "Łotwa"),
+
+    // NORWEGIA
+    OSL("Oslo (OSL)", "Norwegia"),
+    BGO("Bergen (BGO)", "Norwegia"),
+
+    // BAŁKANY
+    ZAG("Zagrzeb (ZAG)", "Chorwacja"),
+    SPU("Split (SPU)", "Chorwacja"),
+    SJJ("Sarajewo (SJJ)", "Bośnia i Hercegowina"),
+    TGD("Podgorica (TGD)", "Czarnogóra"),
+    PRN("Prisztina (PRN)", "Kosowo"),
+    BEG("Belgrad (BEG)", "Serbia"),
+    TIA("Tirana (TIA)", "Albania"),
+    SKP("Skopje (SKP)", "Macedonia Północna"),
+
+    // RUMUNIA
+    OTP("Bukareszt (OTP)", "Rumunia"),
+    IAS("Jassy (IAS)", "Rumunia"),
+    SBZ("Sybin (SBZ)", "Rumunia"),
+
+    // GRECJA
+    ATH("Ateny (ATH)", "Grecja"),
+    CHQ("Chania (CHQ)", "Grecja"),
+    SKG("Saloniki (SKG)", "Grecja"),
+
+    // BUŁGARIA
+    BOJ("Burgas (BOJ)", "Bułgaria"),
+    SOF("Sofia (SOF)", "Bułgaria"),
+
+    // TURCJA
+    IST("Stambuł (IST)", "Turcja"),
+    AYT("Antalya (AYT)", "Turcja"),
+    ESB("Ankara (ESB)", "Turcja"),
+    ADB("Izmir (ADB)", "Turcja"),
+
+    // HISZPANIA
+    MAD("Madryt (MAD)", "Hiszpania"),
+    AGP("Malaga (AGP)", "Hiszpania"),
+    BCN("Barcelona (BCN)", "Hiszpania"),
+    PMI("Palma de Mallorca (PMI)", "Hiszpania"),
+
+    // PORTUGALIA
+    LIS("Lizbona (LIS)", "Portugalia"),
+    OPO("Porto (OPO)", "Portugalia"),
+
+    // IRLANDIA
+    DUB("Dublin (DUB)", "Irlandia"),
+
+    // WŁOCHY
+    MXP("Mediolan (MXP)", "Włochy"),
+    FCO("Rzym (FCO)", "Włochy"),
+    VCE("Wenecja (VCE)", "Włochy"),
+    BLQ("Bolonia (BLQ)", "Włochy"),
+
+    // FRANCJA
+    CDG("Paryż (CDG)", "Francja"),
+    MRS("Marsylia (MRS)", "Francja"),
+    NCE("Nicea (NCE)", "Francja"),
+
+    // WIELKA BRYTANIA
+    LHR("Londyn (LHR)", "Wielka Brytania"),
+    MAN("Manchester (MAN)", "Wielka Brytania"),
+    EDI("Edynburg (EDI)", "Wielka Brytania"),
+
+    // ISLANDIA
+    RKV("Reykjavik (RKV)", "Islandia");
 
     private final String displayName;
+    private final String country;
 
-    Airport(String displayName) {
+    Airport(String displayName, String country) {
         this.displayName = displayName;
+        this.country = country;
     }
 
     public String getDisplayName() {
         return displayName;
     }
+
+    public String getCountry() {
+        return country;
+    }
+
+
+
+    public static Airport fromDisplayName(String text) {
+        if (text == null) return null;
+
+        String trimmed = text.trim();
+        if (trimmed.isEmpty()) return null;
+
+        for (Airport a : Airport.values()) {
+            if (a.getDisplayName().equalsIgnoreCase(trimmed)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
 }

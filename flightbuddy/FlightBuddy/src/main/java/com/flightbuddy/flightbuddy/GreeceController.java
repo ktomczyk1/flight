@@ -22,6 +22,8 @@ public class GreeceController {
     @FXML
     private VBox airportsView;
 
+    private FlightService flightService;
+
     @FXML
     public void initialize() {
 
@@ -49,9 +51,9 @@ Stolica: Ateny
         Button skg = new Button("Saloniki (SKG)");
         Button chq = new Button("Chania (CHQ)");
 
-        ath.setOnAction(e -> showTestFlights("Ateny", "ATH"));
-        skg.setOnAction(e -> showTestFlights("Saloniki", "SKG"));
-        chq.setOnAction(e -> showTestFlights("Chania", "CHQ"));
+        ath.setOnAction(e -> openFlightsView(Airport.ATH));
+        skg.setOnAction(e -> openFlightsView(Airport.SKG));
+        chq.setOnAction(e -> openFlightsView(Airport.CHQ));
 
 
 
@@ -75,6 +77,11 @@ Stolica: Ateny
 
     }
 
+    public void setFlightService(FlightService flightService) {
+        this.flightService = flightService;
+    }
+
+
     private void openFlightsView(Airport airport) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -83,10 +90,13 @@ Stolica: Ateny
 
             Scene scene = new Scene(loader.load());
             FlightsController controller = loader.getController();
-            controller.setAirport(airport);
+
+
+            controller.setFlightService(flightService);
+            controller.setFromAirport(airport);
 
             Stage stage = new Stage();
-            stage.setTitle("Loty");
+            stage.setTitle("Loty – " + airport.getDisplayName());
             stage.setScene(scene);
             stage.show();
 
@@ -94,43 +104,6 @@ Stolica: Ateny
             e.printStackTrace();
         }
     }
-
-    private void showTestFlights(String airportName, String code) {
-
-        Button back = new Button("← Powrót do listy lotnisk");
-        back.setOnAction(e -> {
-            infoPane.getChildren().clear();
-            infoPane.getChildren().add(airportsView);
-        });
-
-        Label title = new Label("Lotnisko: " + airportName + " (" + code + ")");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Label flightsTitle = new Label("Dzisiejsze loty (TEST):");
-        flightsTitle.setStyle("-fx-font-weight: bold;");
-
-        Label flight = new Label("""
-✈ %s → BER
-Godzina: 14:30
-Linia: FlightBuddy Airlines
-Status: Planowany
-""".formatted(code));
-        flight.setStyle("""
-        -fx-border-color: lightgray;
-        -fx-padding: 10;
-        -fx-background-color: #f9f9f9;
-    """);
-
-        infoPane.getChildren().clear();
-        infoPane.getChildren().addAll(
-                back,
-                title,
-                flightsTitle,
-                flight
-        );
-    }
-
-
 
 
 }

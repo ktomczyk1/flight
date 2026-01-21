@@ -18,18 +18,17 @@ public class BulgariaController {
     @FXML
     private VBox infoPane;
 
-
     @FXML
     private VBox airportsView;
+
+    private FlightService flightService;
 
     @FXML
     public void initialize() {
 
-        // === MAPA POLSKI ===
+        // === MAPA BUŁGARII ===
         mapImage.setImage(
-                new Image(
-                        getClass().getResourceAsStream("/Map_Bulgaria.png")
-                )
+                new Image(getClass().getResourceAsStream("/Map_Bulgaria.png"))
         );
 
         // === INFO ===
@@ -44,20 +43,17 @@ Stolica: Sofia
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA ===
         Button sof = new Button("Sofia (SOF)");
         Button boj = new Button("Burgas (BOJ)");
-
-        sof.setOnAction(e -> showTestFlights("Sofia", "SOF"));
-        boj.setOnAction(e -> showTestFlights("Burgas", "BOJ"));
-
-
-
 
         sof.setMaxWidth(Double.MAX_VALUE);
         boj.setMaxWidth(Double.MAX_VALUE);
 
-        // === WYPEŁNIENIE PANELU ===
+        //
+        sof.setOnAction(e -> openFlightsView(Airport.SOF));
+        boj.setOnAction(e -> openFlightsView(Airport.BOJ));
+
         airportsView = new VBox(10);
         airportsView.getChildren().addAll(
                 title,
@@ -67,11 +63,15 @@ Stolica: Sofia
                 boj
         );
 
-        infoPane.getChildren().clear();
-        infoPane.getChildren().add(airportsView);
-
+        infoPane.getChildren().setAll(airportsView);
     }
 
+
+    public void setFlightService(FlightService flightService) {
+        this.flightService = flightService;
+    }
+
+   
     private void openFlightsView(Airport airport) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -80,10 +80,13 @@ Stolica: Sofia
 
             Scene scene = new Scene(loader.load());
             FlightsController controller = loader.getController();
-            controller.setAirport(airport);
+
+            // 🔑 przekazujemy SERWIS + lotnisko startowe
+            controller.setFlightService(flightService);
+            controller.setFromAirport(airport);
 
             Stage stage = new Stage();
-            stage.setTitle("Loty");
+            stage.setTitle("Loty – " + airport.getDisplayName());
             stage.setScene(scene);
             stage.show();
 
@@ -91,43 +94,4 @@ Stolica: Sofia
             e.printStackTrace();
         }
     }
-
-    private void showTestFlights(String airportName, String code) {
-
-        Button back = new Button("← Powrót do listy lotnisk");
-        back.setOnAction(e -> {
-            infoPane.getChildren().clear();
-            infoPane.getChildren().add(airportsView);
-        });
-
-        Label title = new Label("Lotnisko: " + airportName + " (" + code + ")");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Label flightsTitle = new Label("Dzisiejsze loty (TEST):");
-        flightsTitle.setStyle("-fx-font-weight: bold;");
-
-        Label flight = new Label("""
-✈ %s → BER
-Godzina: 14:30
-Linia: FlightBuddy Airlines
-Status: Planowany
-""".formatted(code));
-        flight.setStyle("""
-        -fx-border-color: lightgray;
-        -fx-padding: 10;
-        -fx-background-color: #f9f9f9;
-    """);
-
-        infoPane.getChildren().clear();
-        infoPane.getChildren().addAll(
-                back,
-                title,
-                flightsTitle,
-                flight
-        );
-    }
-
-
-
-
 }

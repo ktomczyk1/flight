@@ -18,21 +18,22 @@ public class AlbaniaController {
     @FXML
     private VBox infoPane;
 
-
     @FXML
     private VBox airportsView;
+
+
+    private FlightService flightService;
+
 
     @FXML
     public void initialize() {
 
-        // === MAPA POLSKI ===
+
         mapImage.setImage(
-                new Image(
-                        getClass().getResourceAsStream("/Map_Albania.png")
-                )
+                new Image(getClass().getResourceAsStream("/Map_Albania.png"))
         );
 
-        // === INFO ===
+
         Label title = new Label("Albania");
         title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
@@ -44,16 +45,14 @@ Stolica: Tirana
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+
         Button tia = new Button("Tirana (TIA)");
-
-        tia.setOnAction(e -> showTestFlights("Tirana", "TIA"));
-
-
-
         tia.setMaxWidth(Double.MAX_VALUE);
 
-        // === WYPEŁNIENIE PANELU ===
+
+        tia.setOnAction(e -> openFlightsView(Airport.TIA));
+
+
         airportsView = new VBox(10);
         airportsView.getChildren().addAll(
                 title,
@@ -62,10 +61,14 @@ Stolica: Tirana
                 tia
         );
 
-        infoPane.getChildren().clear();
-        infoPane.getChildren().add(airportsView);
-
+        infoPane.getChildren().setAll(airportsView);
     }
+
+
+    public void setFlightService(FlightService flightService) {
+        this.flightService = flightService;
+    }
+
 
     private void openFlightsView(Airport airport) {
         try {
@@ -75,10 +78,14 @@ Stolica: Tirana
 
             Scene scene = new Scene(loader.load());
             FlightsController controller = loader.getController();
-            controller.setAirport(airport);
+
+            System.out.println("COUNTRY flightService hash = " + System.identityHashCode(flightService));
+
+            controller.setFlightService(flightService);
+            controller.setFromAirport(airport);
 
             Stage stage = new Stage();
-            stage.setTitle("Loty");
+            stage.setTitle("Loty – " + airport.getDisplayName());
             stage.setScene(scene);
             stage.show();
 
@@ -86,43 +93,4 @@ Stolica: Tirana
             e.printStackTrace();
         }
     }
-
-    private void showTestFlights(String airportName, String code) {
-
-        Button back = new Button("← Powrót do listy lotnisk");
-        back.setOnAction(e -> {
-            infoPane.getChildren().clear();
-            infoPane.getChildren().add(airportsView);
-        });
-
-        Label title = new Label("Lotnisko: " + airportName + " (" + code + ")");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Label flightsTitle = new Label("Dzisiejsze loty (TEST):");
-        flightsTitle.setStyle("-fx-font-weight: bold;");
-
-        Label flight = new Label("""
-✈ %s → BER
-Godzina: 14:30
-Linia: FlightBuddy Airlines
-Status: Planowany
-""".formatted(code));
-        flight.setStyle("""
-        -fx-border-color: lightgray;
-        -fx-padding: 10;
-        -fx-background-color: #f9f9f9;
-    """);
-
-        infoPane.getChildren().clear();
-        infoPane.getChildren().addAll(
-                back,
-                title,
-                flightsTitle,
-                flight
-        );
-    }
-
-
-
-
 }

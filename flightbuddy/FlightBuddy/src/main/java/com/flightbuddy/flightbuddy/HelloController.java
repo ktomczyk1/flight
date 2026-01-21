@@ -9,14 +9,31 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.layout.Pane;
 
+import javax.sound.sampled.Port;
 import java.io.IOException;
 
 public class HelloController {
 
-    // ===== FXML =====
+
     @FXML
     private Pane mapPane;
+
+    // 🔑 JEDEN WSPÓLNY SERWIS LOTÓW
+    private FlightService flightService;
+
+    public void setFlightService(FlightService flightService) {
+        this.flightService = flightService;
+
+        System.out.println(
+                "HELLO flightService hash = " +
+                        System.identityHashCode(flightService)
+        );
+    }
+
+    // ===== FXML =====
 
     // kontroler prawego panelu (fx:include)
     @FXML
@@ -2785,25 +2802,39 @@ public class HelloController {
     }
 
     // mapka danego kraju
-    private void openCountryMap(String imageName) {
+    private void openCountryMap(String fxmlName, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/" + fxmlName)
+            );
 
-        Image image = new Image(
-                getClass().getResourceAsStream("/" + imageName)
-        );
+            Scene scene = new Scene(loader.load(), 900, 600);
 
-        ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(900);
-        imageView.setFitHeight(600);
+            // 🔑 POBIERAMY CONTROLLERA KRAJU
+            Object controller = loader.getController();
 
-        Pane root = new Pane(imageView);
-        Scene scene = new Scene(root, 900, 600);
+            // 🔥 PRZEKAZUJEMY TEN SAM FlightService
+            if (controller instanceof BulgariaController bc) {
+                bc.setFlightService(flightService);
+            }
+            if (controller instanceof LatviaController lc) {
+                lc.setFlightService(flightService);
+            }
+            if (controller instanceof PolandController pc) {
+                pc.setFlightService(flightService);
+            }
+            // itd. – KAŻDY country controller
 
-        Stage stage = new Stage();
-        stage.setTitle(imageName);
-        stage.setScene(scene);
-        stage.show();
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     private void openPolandView() {
         try {
@@ -2812,6 +2843,13 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+
+            // 🔑 KLUCZ: POBIERAMY CONTROLLERA
+            PolandController controller = loader.getController();
+
+            // 🔥 KLUCZ: PRZEKAZUJEMY TEN SAM FlightService
+            controller.setFlightService(flightService);
+
             Stage stage = new Stage();
             stage.setTitle("Polska");
             stage.setScene(scene);
@@ -2822,6 +2860,7 @@ public class HelloController {
         }
     }
 
+
     private void openGermanyView() {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -2829,6 +2868,10 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            GermanyController controller = loader.getController();
+
+            controller.setFlightService(flightService);
+
             Stage stage = new Stage();
             stage.setTitle("Niemcy");
             stage.setScene(scene);
@@ -2846,6 +2889,10 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            DenmarkController controller = loader.getController();
+
+            controller.setFlightService(flightService);
+
             Stage stage = new Stage();
             stage.setTitle("Dania");
             stage.setScene(scene);
@@ -2863,6 +2910,10 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+
+            LithuaniaController controller = loader.getController();
+            controller.setFlightService(flightService);
+
             Stage stage = new Stage();
             stage.setTitle("Litwa");
             stage.setScene(scene);
@@ -2880,6 +2931,9 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            RussiaController controller = loader.getController();
+            controller.setFlightService(flightService);
+
             Stage stage = new Stage();
             stage.setTitle("Rosja");
             stage.setScene(scene);
@@ -2897,6 +2951,9 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+
+            BelarusController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Białoruś");
             stage.setScene(scene);
@@ -2914,6 +2971,9 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+
+            FinlandController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Finlandia");
             stage.setScene(scene);
@@ -2931,6 +2991,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            SwedenController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Szwecja");
             stage.setScene(scene);
@@ -2948,6 +3010,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            CzechiaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Czechy");
             stage.setScene(scene);
@@ -2965,6 +3029,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            SlovakiaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Słowacja");
             stage.setScene(scene);
@@ -2982,6 +3048,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            AustriaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Austria");
             stage.setScene(scene);
@@ -2999,6 +3067,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            SwitzerlandController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Szwajcaria");
             stage.setScene(scene);
@@ -3016,6 +3086,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            NetherlandsController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Holandia");
             stage.setScene(scene);
@@ -3033,6 +3105,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            BelgiumController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Belgia");
             stage.setScene(scene);
@@ -3050,6 +3124,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            LuxemburgController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Luksemburg");
             stage.setScene(scene);
@@ -3067,6 +3143,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            HungaryController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Węgry");
             stage.setScene(scene);
@@ -3084,6 +3162,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            SloveniaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Słowenia");
             stage.setScene(scene);
@@ -3118,6 +3198,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            MoldovaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Mołdawia");
             stage.setScene(scene);
@@ -3135,6 +3217,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            EstoniaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Estonia");
             stage.setScene(scene);
@@ -3152,6 +3236,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            LatviaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Łotwa");
             stage.setScene(scene);
@@ -3169,6 +3255,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            NorwayController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Norwegia");
             stage.setScene(scene);
@@ -3186,6 +3274,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            CroatiaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Chorwacja");
             stage.setScene(scene);
@@ -3203,6 +3293,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            BosniaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Bośnia i Hercegowina");
             stage.setScene(scene);
@@ -3220,6 +3312,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            MontenegroController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Czarnogóra");
             stage.setScene(scene);
@@ -3237,6 +3331,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            KosovoController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Kosowo");
             stage.setScene(scene);
@@ -3254,6 +3350,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            SerbiaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Serbia");
             stage.setScene(scene);
@@ -3271,6 +3369,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            AlbaniaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Albania");
             stage.setScene(scene);
@@ -3288,6 +3388,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            MacedoniaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Macedonia");
             stage.setScene(scene);
@@ -3305,6 +3407,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            RomaniaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Rumunia");
             stage.setScene(scene);
@@ -3322,6 +3426,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            GreeceController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Grecja");
             stage.setScene(scene);
@@ -3339,6 +3445,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            BulgariaController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Bułgaria");
             stage.setScene(scene);
@@ -3356,6 +3464,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            TurkeyController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Turcja");
             stage.setScene(scene);
@@ -3373,6 +3483,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            SpainController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Hiszpania");
             stage.setScene(scene);
@@ -3390,6 +3502,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            PortugalController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Portugalia");
             stage.setScene(scene);
@@ -3407,6 +3521,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            IrelandController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Irlandia");
             stage.setScene(scene);
@@ -3424,6 +3540,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            ItalyController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Włochy");
             stage.setScene(scene);
@@ -3441,6 +3559,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            FranceController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Francja");
             stage.setScene(scene);
@@ -3458,6 +3578,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            BritainController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Wielka Brytania");
             stage.setScene(scene);
@@ -3475,6 +3597,8 @@ public class HelloController {
             );
 
             Scene scene = new Scene(loader.load(), 1200, 600);
+            IcelandController controller = loader.getController();
+            controller.setFlightService(flightService);
             Stage stage = new Stage();
             stage.setTitle("Islandia");
             stage.setScene(scene);

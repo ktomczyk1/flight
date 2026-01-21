@@ -22,6 +22,8 @@ public class AustriaController {
     @FXML
     private VBox airportsView;
 
+    private FlightService flightService;
+
     @FXML
     public void initialize() {
 
@@ -48,8 +50,8 @@ Stolica: Wiedeń
         Button vie = new Button("Wiedeń (VIE)");
         Button inn = new Button("Innsbruck (INN)");
 
-        vie.setOnAction(e -> showTestFlights("Wiedeń", "VIE"));
-        inn.setOnAction(e -> showTestFlights("Innsbruck", "INN"));
+        vie.setOnAction(e -> openFlightsView(Airport.VIE));
+        inn.setOnAction(e -> openFlightsView(Airport.INN));
 
 
 
@@ -71,6 +73,11 @@ Stolica: Wiedeń
 
     }
 
+    public void setFlightService(FlightService flightService) {
+        this.flightService = flightService;
+    }
+
+
     private void openFlightsView(Airport airport) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -79,10 +86,13 @@ Stolica: Wiedeń
 
             Scene scene = new Scene(loader.load());
             FlightsController controller = loader.getController();
-            controller.setAirport(airport);
+
+
+            controller.setFlightService(flightService);
+            controller.setFromAirport(airport);
 
             Stage stage = new Stage();
-            stage.setTitle("Loty");
+            stage.setTitle("Loty – " + airport.getDisplayName());
             stage.setScene(scene);
             stage.show();
 
@@ -90,43 +100,6 @@ Stolica: Wiedeń
             e.printStackTrace();
         }
     }
-
-    private void showTestFlights(String airportName, String code) {
-
-        Button back = new Button("← Powrót do listy lotnisk");
-        back.setOnAction(e -> {
-            infoPane.getChildren().clear();
-            infoPane.getChildren().add(airportsView);
-        });
-
-        Label title = new Label("Lotnisko: " + airportName + " (" + code + ")");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Label flightsTitle = new Label("Dzisiejsze loty (TEST):");
-        flightsTitle.setStyle("-fx-font-weight: bold;");
-
-        Label flight = new Label("""
-✈ %s → BER
-Godzina: 14:30
-Linia: FlightBuddy Airlines
-Status: Planowany
-""".formatted(code));
-        flight.setStyle("""
-        -fx-border-color: lightgray;
-        -fx-padding: 10;
-        -fx-background-color: #f9f9f9;
-    """);
-
-        infoPane.getChildren().clear();
-        infoPane.getChildren().addAll(
-                back,
-                title,
-                flightsTitle,
-                flight
-        );
-    }
-
-
 
 
 }

@@ -76,7 +76,7 @@ Stolica: Kijów
 
             Scene scene = new Scene(loader.load());
             FlightsController controller = loader.getController();
-            controller.setAirport(airport);
+            //controller.setAirport(airport);
 
             Stage stage = new Stage();
             stage.setTitle("Loty");

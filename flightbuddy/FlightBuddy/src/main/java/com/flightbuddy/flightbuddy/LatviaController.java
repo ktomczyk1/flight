@@ -18,6 +18,8 @@ public class LatviaController {
     @FXML
     private VBox infoPane;
 
+    private FlightService flightService;
+
 
     @FXML
     private VBox airportsView;
@@ -47,7 +49,7 @@ Stolica: Ryga
         // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
         Button rix = new Button("Ryga (RIX)");
 
-        rix.setOnAction(e -> showTestFlights("Ryga", "RIX"));
+        rix.setOnAction(e -> openFlightsView(Airport.RIX));
 
 
 
@@ -67,6 +69,11 @@ Stolica: Ryga
 
     }
 
+    public void setFlightService(FlightService flightService) {
+        this.flightService = flightService;
+    }
+
+
     private void openFlightsView(Airport airport) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -75,10 +82,13 @@ Stolica: Ryga
 
             Scene scene = new Scene(loader.load());
             FlightsController controller = loader.getController();
-            controller.setAirport(airport);
+
+
+            controller.setFlightService(flightService);
+            controller.setFromAirport(airport);
 
             Stage stage = new Stage();
-            stage.setTitle("Loty");
+            stage.setTitle("Loty – " + airport.getDisplayName());
             stage.setScene(scene);
             stage.show();
 
@@ -86,42 +96,6 @@ Stolica: Ryga
             e.printStackTrace();
         }
     }
-
-    private void showTestFlights(String airportName, String code) {
-
-        Button back = new Button("← Powrót do listy lotnisk");
-        back.setOnAction(e -> {
-            infoPane.getChildren().clear();
-            infoPane.getChildren().add(airportsView);
-        });
-
-        Label title = new Label("Lotnisko: " + airportName + " (" + code + ")");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Label flightsTitle = new Label("Dzisiejsze loty (TEST):");
-        flightsTitle.setStyle("-fx-font-weight: bold;");
-
-        Label flight = new Label("""
-✈ %s → BER
-Godzina: 14:30
-Linia: FlightBuddy Airlines
-Status: Planowany
-""".formatted(code));
-        flight.setStyle("""
-        -fx-border-color: lightgray;
-        -fx-padding: 10;
-        -fx-background-color: #f9f9f9;
-    """);
-
-        infoPane.getChildren().clear();
-        infoPane.getChildren().addAll(
-                back,
-                title,
-                flightsTitle,
-                flight
-        );
-    }
-
 
 
 
