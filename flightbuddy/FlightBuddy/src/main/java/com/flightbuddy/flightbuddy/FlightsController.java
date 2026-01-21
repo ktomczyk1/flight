@@ -3,6 +3,7 @@ package com.flightbuddy.flightbuddy;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,14 +13,13 @@ import java.util.List;
 
 public class FlightsController {
 
-    @FXML
-    private Label titleLabel;
-
-    @FXML
-    private VBox flightsBox;
+    @FXML private Label titleLabel;
+    @FXML private TextField searchField;
+    @FXML private VBox flightsBox;
 
     private FlightService flightService;
     private Airport fromAirport;
+    private List<Flight> allFlights = new ArrayList<>(); // Loty do filtrowania
 
     // ===================== SETTERY =====================
 
@@ -47,43 +47,51 @@ public class FlightsController {
     // ===================== RYSOWANIE =====================
 
     private void loadTodayFlights() {
-
         LocalDate today = LocalDate.now();
-        List<Flight> allFlights = new ArrayList<>();
+        allFlights.clear();
 
         for (Airport to : Airport.values()) {
             if (to == fromAirport) continue;
-
-            allFlights.addAll(
-                    flightService.searchFlights(fromAirport, to, today, today)
-            );
+            allFlights.addAll(flightService.searchFlights(fromAirport, to, today, today));
         }
 
         allFlights.sort(Comparator.comparing(Flight::getTime));
 
+        // ustawiamy listener na TextField
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterFlights(newVal));
+
+        // początkowe wyświetlenie wszystkich lotów
+        filterFlights("");
+    }
+
+    private void filterFlights(String filter) {
         flightsBox.getChildren().clear();
 
-        if (allFlights.isEmpty()) {
-            flightsBox.getChildren().add(
-                    new Label("Brak lotów na dziś")
-            );
+        String search = filter.toLowerCase();
+
+        List<Flight> filtered = allFlights.stream()
+                .filter(f -> f.getTo().getDisplayName().toLowerCase().contains(search))
+                .toList();
+
+        if (filtered.isEmpty()) {
+            flightsBox.getChildren().add(new Label("Brak lotów spełniających kryteria"));
             return;
         }
 
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
 
-        for (Flight f : allFlights) {
+        for (Flight f : filtered) {
             Label flightLabel = new Label(
                     "✈ " + f.getTime().format(timeFmt)
                             + " → " + f.getTo().getDisplayName()
             );
             flightLabel.setStyle("""
-                -fx-padding: 8;
-                -fx-border-color: lightgray;
-                -fx-background-color: #f9f9f9;
-            """);
-
+            -fx-padding: 8;
+            -fx-border-color: lightgray;
+            -fx-background-color: #f9f9f9;
+        """);
             flightsBox.getChildren().add(flightLabel);
         }
     }
+
 }

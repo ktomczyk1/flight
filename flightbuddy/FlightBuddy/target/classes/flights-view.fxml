@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
@@ -21,11 +22,15 @@
 
     <!-- LISTA LOTÓW -->
     <center>
-        <ScrollPane fitToWidth="true">
-            <VBox fx:id="flightsBox"
-                  spacing="8"
-                  style="-fx-padding: 12;" />
-        </ScrollPane>
+        <VBox spacing="8" style="-fx-padding: 12;">
+            <!-- Wyszukiwarka -->
+            <TextField fx:id="searchField" promptText="Szukaj miasta docelowego..." />
+
+            <!-- Lista lotów -->
+            <ScrollPane fitToWidth="true">
+                <VBox fx:id="flightsBox" spacing="8" />
+            </ScrollPane>
+        </VBox>
     </center>
 
 </BorderPane>
