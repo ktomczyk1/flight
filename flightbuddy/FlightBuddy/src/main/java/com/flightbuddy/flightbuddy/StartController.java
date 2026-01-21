@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import com.flightbuddy.flightbuddy.Flight;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+
 
 
 public class StartController {
@@ -27,7 +32,6 @@ public class StartController {
 
     @FXML private Button bookButton; // dodamy w FXML
 
-
     // ===================== GLOBAL =====================
     private FlightService flightService;
 
@@ -36,6 +40,8 @@ public class StartController {
     @FXML private Button showRegisterButton;
     @FXML private Button showMapButton;
     @FXML private Label loggedInLabel;
+
+    @FXML private Button showAdminToolsButton; // Narzędzia administratora
 
     @FXML private VBox loginPane;
     @FXML private VBox registerPane;
@@ -159,6 +165,7 @@ public class StartController {
         new AutoCompleteSupport(fromField, fromSuggestions, cities);
         new AutoCompleteSupport(toField, toSuggestions, cities);
 
+        // ---------------- LOGIN / REGISTER ----------------
         showLoginButton.setOnAction(e -> {
             loginPane.setVisible(true);
             registerPane.setVisible(false);
@@ -172,12 +179,23 @@ public class StartController {
         closeLoginButton.setOnAction(e -> loginPane.setVisible(false));
         closeRegisterButton.setOnAction(e -> registerPane.setVisible(false));
 
-        loginButton.setOnAction(e -> handleLogin());
+        // ---------------- LOGIN / REGISTER HANDLERS ----------------
+        loginButton.setOnAction(e -> {
+            handleLogin();
+
+            // po zalogowaniu pokaż przycisk admina, jeśli to admin
+            if (loggedInUser != null && loggedInUser.getRole() == User.Role.ADMIN) {
+                showAdminToolsButton.setVisible(true);
+            }
+        });
+
         registerButton.setOnAction(e -> handleRegister());
         searchButton.setOnAction(e -> handleSearch());
-
         showMapButton.setOnAction(e -> openMapWindow());
+        showAdminToolsButton.setVisible(false);
+        showAdminToolsButton.setOnAction(e -> openAdminToolsWindow());
     }
+
 
     // ===================== MAPA =====================
     private void openMapWindow() {
@@ -222,7 +240,7 @@ public class StartController {
         }
 
         loggedInUser = user;
-        loggedInLabel.setText("Zalogowano: " + user.getFirstName());
+        loggedInLabel.setText("Zalogowano jako:\n " + user.getFirstName() + " " + user.getLastName());
 
         showLoginButton.setText("Wyloguj");
         showLoginButton.setOnAction(e -> handleLogout());
@@ -386,14 +404,6 @@ public class StartController {
         showRoundTripResult(result);
     }
 
-
-    // ===================== USER =====================
-    /* private static class User {
-        String firstName, lastName, email, phone, password;
-        User(String f, String l, String e, String p, String pw) {
-            firstName = f; lastName = l; email = e; phone = p; password = pw;
-        }
-    } */
 
     private void showRoundTripResult(RoundTripResult result) {
 
@@ -590,5 +600,85 @@ public class StartController {
         alert.showAndWait();
     }
 
+    // Panel admina
+    private void openAdminToolsWindow() {
+        Stage stage = new Stage();
+        stage.setTitle("Narzędzia Administratora");
+
+        // Lewy panel – wybór kategorii
+        VBox menu = new VBox(10);
+        menu.setPadding(new Insets(10));
+        Button manageUsersButton = new Button("Zarządzanie użytkownikami");
+        Button manageFlightsButton = new Button("Zarządzanie lotami");
+        menu.getChildren().addAll(manageUsersButton, manageFlightsButton);
+
+        // Prawy panel – zawartość
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(10));
+
+        // Layout główny
+        HBox root = new HBox(20, menu, content);
+        Scene scene = new Scene(root, 800, 600);
+        stage.setScene(scene);
+        stage.show();
+
+        // Akcje przycisków menu
+        manageUsersButton.setOnAction(e -> showUserManagement(content));
+        manageFlightsButton.setOnAction(e -> showFlightManagement(content));
+    }
+
+    // Panel admina - zarządzanie użytkownikami
+    private void showUserManagement(VBox content) {
+        content.getChildren().clear();
+        content.getChildren().add(new Label("Lista użytkowników:"));
+
+        List<User> users = userService.getAllUsers();
+
+        for (User user : users) {
+            HBox userBox = new HBox(10);
+            Label info = new Label(user.getFirstName() + " " + user.getLastName() +
+                    " | " + user.getEmail() + " | " + user.getPhone());
+
+            // Tworzymy przycisk Usuń tylko dla zwykłych użytkowników
+            if (user.getRole() != User.Role.ADMIN) {
+                Button deleteButton = new Button("Usuń");
+
+                deleteButton.setOnAction(e -> {
+                    boolean success = userService.removeUserByEmail(user.getEmail());
+                    if (success) {
+                        showAlert("Sukces", "Użytkownik usunięty");
+                        showUserManagement(content); // odśwież listę
+                    } else {
+                        showAlert("Błąd", "Nie udało się usunąć użytkownika");
+                    }
+                });
+
+                userBox.getChildren().addAll(info, deleteButton);
+            } else {
+                // jeśli admin, tylko label
+                userBox.getChildren().add(info);
+            }
+
+            content.getChildren().add(userBox);
+        }
+    }
+
+
+    // Panel admina - zarządzanie lotami (do późniejszej implementacji ?)
+    private void showFlightManagement(VBox content) {
+        content.getChildren().clear();
+        content.getChildren().add(new Label("Zarządzanie lotami (w przygotowaniu)"));
+
+        Button addFlightButton = new Button("Dodaj lot");
+        Button editFlightButton = new Button("Edytuj lot");
+        Button removeFlightButton = new Button("Usuń lot");
+
+        // na razie nieaktywne
+        addFlightButton.setDisable(true);
+        editFlightButton.setDisable(true);
+        removeFlightButton.setDisable(true);
+
+        content.getChildren().addAll(addFlightButton, editFlightButton, removeFlightButton);
+    }
 
 }

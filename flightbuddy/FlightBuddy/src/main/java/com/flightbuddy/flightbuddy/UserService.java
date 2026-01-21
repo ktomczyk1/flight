@@ -7,19 +7,21 @@ public class UserService
 {
     private final List<User> users = new ArrayList<>();
 
+    // Defaultowy administrator
     public UserService() {
-        // Defaultowy admin
         users.add(new User(
-                "Admin", "Admin",
+                "ADMIN", "ADMIN",
                 "admin@flightbuddy.com", "000000000",
                 "admin", User.Role.ADMIN
         ));
     }
 
-    public boolean emailExists(String email) {
-        return users.stream()
-                .anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
+    public List<User> getAllUsers() {return new ArrayList<>(users);}
+
+    public boolean removeUserByEmail(String email) {
+        return users.removeIf(u -> u.getEmail().equals(email));
     }
+
 
     public boolean register(User user) {
         // sprawdzenie, czy istnieje użytkownik z takim emailem lub telefonem
@@ -43,6 +45,6 @@ public class UserService
                 .orElse(null);
     }
 
-    public List<User> getAllUsers() {return users;}
+    // public List<User> getAllUsers() {return users;}
     public void removeUser(User user) {users.remove(user);}
 }

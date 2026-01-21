@@ -29,6 +29,7 @@
             <Region HBox.hgrow="ALWAYS"/>
 
             <Button text="Mapa" fx:id="showMapButton" prefWidth="100"/>
+            <Button fx:id="showAdminToolsButton" text="Narzędzia Administratora" visible="false"/>
 
             <Region HBox.hgrow="ALWAYS"/>
 
