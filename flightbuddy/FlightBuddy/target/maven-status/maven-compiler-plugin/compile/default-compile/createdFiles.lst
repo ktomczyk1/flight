@@ -35,6 +35,7 @@ com\flightbuddy\flightbuddy\AustriaController.class
 com\flightbuddy\flightbuddy\User$Role.class
 com\flightbuddy\flightbuddy\BelarusController.class
 com\flightbuddy\flightbuddy\LatviaController.class
+com\flightbuddy\flightbuddy\FlightStatus.class
 com\flightbuddy\flightbuddy\GermanyController.class
 com\flightbuddy\flightbuddy\CountryInfoService.class
 com\flightbuddy\flightbuddy\SloveniaController.class
@@ -43,6 +44,7 @@ com\flightbuddy\flightbuddy\FranceController.class
 com\flightbuddy\flightbuddy\SerbiaController.class
 com\flightbuddy\flightbuddy\CountryInfo.class
 com\flightbuddy\flightbuddy\DenmarkController.class
+com\flightbuddy\flightbuddy\FlightKey.class
 com\flightbuddy\flightbuddy\BritainController.class
 com\flightbuddy\flightbuddy\AlbaniaController.class
 com\flightbuddy\flightbuddy\ItalyController.class

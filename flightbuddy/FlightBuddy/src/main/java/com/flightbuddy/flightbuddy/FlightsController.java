@@ -81,17 +81,30 @@ public class FlightsController {
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
 
         for (Flight f : filtered) {
-            Label flightLabel = new Label(
-                    "✈ " + f.getTime().format(timeFmt)
-                            + " → " + f.getTo().getDisplayName()
-            );
-            flightLabel.setStyle("""
+            FlightStatus status = flightService.getStatus(f);
+
+            // Informacje o locie i dopisek, jeśli anulowany
+            String text = "✈ " + f.getTime().format(timeFmt)
+                    + " → " + f.getTo().getDisplayName();
+            if (status == FlightStatus.CANCELED) {text += " (ANULOWANY)";}
+            Label flightLabel = new Label(text);
+
+            if (status == FlightStatus.CANCELED) {
+                flightLabel.setStyle("""
+            -fx-padding: 8;
+            -fx-border-color: red;
+            -fx-background-color: #ffe5e5;
+            -fx-text-fill: #a00000;
+        """);
+            } else {
+                flightLabel.setStyle("""
             -fx-padding: 8;
             -fx-border-color: lightgray;
             -fx-background-color: #f9f9f9;
         """);
+            }
+
             flightsBox.getChildren().add(flightLabel);
         }
     }
-
 }

@@ -2,6 +2,7 @@ package com.flightbuddy.flightbuddy;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -12,6 +13,7 @@ import javafx.geometry.Insets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import com.flightbuddy.flightbuddy.Flight;
@@ -19,8 +21,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
-
-
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class StartController {
 
@@ -160,9 +162,7 @@ public class StartController {
 
         // 🔑 TWORZYMY ŚWIAT LOTÓW – RAZ
         RouteGenerator generator = new RouteGenerator();
-        flightService = new FlightService(
-                generator.generateRoutes(List.of(Airport.values()))
-        );
+        flightService = new FlightService(generator.generateRoutes(List.of(Airport.values())));
 
         // autocomplete
         new AutoCompleteSupport(fromField, fromSuggestions, cities);
@@ -765,21 +765,244 @@ public class StartController {
     }
 
 
-    // Panel admina - zarządzanie lotami (do późniejszej implementacji ?)
+    // Panel admina - zarządzanie lotami
     private void showFlightManagement(VBox content) {
         content.getChildren().clear();
-        content.getChildren().add(new Label("Zarządzanie lotami (w przygotowaniu)"));
+
+        // --- Górny pasek: tytuł + przycisk dodaj lot ---
+        HBox topBar = new HBox(10);
+        Label title = new Label("Zarządzanie lotami:");
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         Button addFlightButton = new Button("Dodaj lot");
-        Button editFlightButton = new Button("Edytuj lot");
-        Button removeFlightButton = new Button("Usuń lot");
+        addFlightButton.setOnAction(e -> openAddFlightDialog(content));
+        topBar.getChildren().addAll(title, addFlightButton);
+        content.getChildren().add(topBar);
 
-        // na razie nieaktywne
-        addFlightButton.setDisable(true);
-        editFlightButton.setDisable(true);
-        removeFlightButton.setDisable(true);
+        // --- Search bary ---
+        HBox searchBar = new HBox(10);
 
-        content.getChildren().addAll(addFlightButton, editFlightButton, removeFlightButton);
+        TextField fromField = new TextField();
+        fromField.setPromptText("Miasto wylotowe (3+ litery)");
+        fromField.setPrefWidth(200);
+
+        TextField toField = new TextField();
+        toField.setPromptText("Miasto przylotowe (3+ litery)");
+        toField.setPrefWidth(200);
+
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("Wybierz datę odlotu");
+        datePicker.setPrefWidth(150);
+
+        searchBar.getChildren().addAll(fromField, toField, datePicker);
+        content.getChildren().add(searchBar);
+
+        // --- Miejsce na wyniki ---
+        VBox flightsList = new VBox(5);
+        flightsList.setPadding(new Insets(10));
+        content.getChildren().add(flightsList);
+
+        // --- Runnable do odświeżania listy lotów ---
+        final Runnable[] refreshFlights = new Runnable[1];
+        refreshFlights[0] = () -> {
+            flightsList.getChildren().clear();
+
+            String fromQuery = fromField.getText().toLowerCase();
+            String toQuery = toField.getText().toLowerCase();
+            LocalDate dateFilter = datePicker.getValue();
+
+            if (fromQuery.length() < 3 || toQuery.length() < 3 || dateFilter == null) return;
+
+            List<Flight> filtered = flightService.getAllFlights().stream()
+                    .filter(f -> f.getFrom().getDisplayName().toLowerCase().contains(fromQuery)
+                            && f.getTo().getDisplayName().toLowerCase().contains(toQuery)
+                            && f.getDate().equals(dateFilter))
+                    .toList();
+
+            for (Flight f : filtered) {
+                FlightStatus status = flightService.getStatus(f);
+
+                String line = String.format(
+                        "%s %s %s → %s | Cena: %d zł | Status: %s",
+                        f.getDate(),
+                        f.getTime(),
+                        f.getFrom().getDisplayName(),
+                        f.getTo().getDisplayName(),
+                        f.getPrice(),
+                        status
+                );
+
+                Label flightLabel = new Label(line);
+                flightLabel.setPrefWidth(400);
+
+                Button editButton = new Button("Edytuj");
+                editButton.setDisable(true); // na razie wyłączony
+
+                Button toggleButton = new Button(status == FlightStatus.ACTIVE ? "Anuluj" : "Przywróć");
+                toggleButton.setOnAction(ev -> {
+                    if (status == FlightStatus.ACTIVE) flightService.cancelFlight(f);
+                    else flightService.restoreFlight(f);
+                    refreshFlights[0].run();
+                });
+
+                HBox row = new HBox(10, flightLabel, editButton, toggleButton);
+                row.setPadding(new Insets(5));
+                row.setStyle("-fx-border-color: lightgray; -fx-background-color: #f9f9f9; -fx-border-radius: 6; -fx-background-radius: 6;");
+
+                flightsList.getChildren().add(row);
+            }
+        };
+
+        // --- Listeners do search barów ---
+        fromField.textProperty().addListener((obs, oldText, newText) -> refreshFlights[0].run());
+        toField.textProperty().addListener((obs, oldText, newText) -> refreshFlights[0].run());
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> refreshFlights[0].run());
+
+        // --- Akcja przycisku Dodaj lot ---
+        addFlightButton.setOnAction(e -> openAddFlightDialog(content));
     }
+
+
+
+    // Zarządzanie lotami - dodawanie lotów
+    private void openAddFlightDialog(VBox content) {
+        Stage stage = new Stage();
+        stage.setTitle("Dodaj nowy lot");
+
+        VBox root = new VBox(10);
+        root.setPadding(new Insets(10));
+
+        // --- Pola tekstowe z podpowiedziami ---
+        TextField fromField = new TextField();
+        fromField.setPromptText("Miasto wylotowe");
+        setupAirportAutocomplete(fromField);
+
+        TextField toField = new TextField();
+        toField.setPromptText("Miasto przylotowe");
+        setupAirportAutocomplete(toField);
+
+        // --- DatePicker dla daty ---
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("Data lotu");
+
+        // --- Pole czasu ---
+        TextField timeField = new TextField();
+        timeField.setPromptText("Godzina (HH:MM)");
+
+        // --- Pole ceny ---
+        TextField priceField = new TextField();
+        priceField.setPromptText("Cena");
+
+        Button addButton = new Button("Dodaj lot");
+
+        addButton.setOnAction(ev -> {
+            String fromText = fromField.getText().trim();
+            String toText = toField.getText().trim();
+            LocalDate date = datePicker.getValue();
+            String timeText = timeField.getText().trim();
+            String priceText = priceField.getText().trim();
+
+            // --- Walidacja ---
+            if (fromText.isEmpty() || toText.isEmpty() || date == null
+                    || timeText.isEmpty() || priceText.isEmpty()) {
+                showAlert("Błąd", "Wszystkie pola muszą być wypełnione");
+                return;
+            }
+
+            Airport from = Airport.fromDisplayName(fromText);
+            Airport to = Airport.fromDisplayName(toText);
+
+            if (from == null || to == null) {
+                showAlert("Błąd", "Wybierz lotnisko z listy podpowiedzi");
+                return;
+            }
+
+            if (from == to) {
+                showAlert("Błąd", "Lotnisko wylotu i przylotu nie może być takie samo");
+                return;
+            }
+
+            LocalTime time;
+            try {
+                String[] parts = timeText.split(":");
+                time = LocalTime.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+            } catch (Exception ex) {
+                showAlert("Błąd", "Niepoprawna godzina");
+                return;
+            }
+
+            int price;
+            try {
+                price = Integer.parseInt(priceText);
+            } catch (NumberFormatException ex) {
+                showAlert("Błąd", "Niepoprawna cena");
+                return;
+            }
+
+            // --- Tworzenie i dodanie lotu ---
+            Flight flight = new Flight(from, to, date, time, price);
+            flightService.addFlight(flight); // upewnij się, że masz metodę addFlight w FlightService
+
+            showAlert("Sukces", "Lot dodany");
+
+            stage.close();
+
+            // --- Odświeżenie listy w zarządzaniu lotami ---
+            Flight newFlight = new Flight(from, to, date, time, price);
+            flightService.addFlight(newFlight);
+            showFlightManagement(content); // teraz content jest przekazany jako parametr
+        });
+
+        root.getChildren().addAll(fromField, toField, datePicker, timeField, priceField, addButton);
+
+        Scene scene = new Scene(root, 300, 300);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+    private void setupAirportAutocomplete(TextField field) {
+        ContextMenu suggestionsMenu = new ContextMenu();
+
+        field.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.length() < 1) {
+                suggestionsMenu.hide();
+                return;
+            }
+
+            List<Airport> matches = Arrays.stream(Airport.values())
+                    .filter(a -> a.getDisplayName().toLowerCase().contains(newText.toLowerCase()))
+                    .toList();
+
+            if (matches.isEmpty()) {
+                suggestionsMenu.hide();
+                return;
+            }
+
+            List<MenuItem> items = matches.stream().map(a -> {
+                MenuItem mi = new MenuItem(a.getDisplayName());
+                mi.setOnAction(e -> {
+                    field.setText(a.getDisplayName());
+                    suggestionsMenu.hide();
+                });
+                return mi;
+            }).toList();
+
+            suggestionsMenu.getItems().setAll(items);
+            if (!suggestionsMenu.isShowing()) {
+                suggestionsMenu.show(field, Side.BOTTOM, 0, 0);
+            }
+        });
+
+        field.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if (!newFocus) suggestionsMenu.hide();
+        });
+    }
+
+
+
+
+
+
 
 }

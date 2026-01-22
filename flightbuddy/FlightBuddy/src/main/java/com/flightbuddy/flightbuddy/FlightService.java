@@ -8,16 +8,30 @@ import java.util.*;
 
 public class FlightService {
 
-
-
+    private final Map<FlightKey, FlightStatus> flightStatuses = new HashMap<>();
+    private final List<Flight> flights = new ArrayList<>();
 
     private final List<Route> routes;
 
     public FlightService(List<Route> routes) {
         this.routes = routes;
+
+        // wygenerowanie wszystkich lotów z tras na najbliższe dni (np. 30 dni)
+        LocalDate today = LocalDate.now();
+        LocalDate end = today.plusDays(30); // generujemy 30 dni lotów
+
+        for (LocalDate date = today; !date.isAfter(end); date = date.plusDays(1)) {
+            for (Route route : routes) {
+                if (route.operatesOn(date.getDayOfWeek())) {
+                    flights.addAll(generateFlightsForDay(route, route.getA(), route.getB(), date));
+                }
+            }
+        }
     }
 
+
     // --- GŁÓWNA METODA ---
+// --- LOTY NA OKREŚLONY PRZEDZIAŁ DAT ---
     public List<Flight> searchFlights(
             Airport from,
             Airport to,
@@ -26,20 +40,45 @@ public class FlightService {
     ) {
         List<Flight> result = new ArrayList<>();
 
-        for (LocalDate date = fromDate; !date.isAfter(toDate); date = date.plusDays(1)) {
+        // 1️⃣ Dodaj ręcznie wprowadzone loty, które pasują do kryteriów
+        for (Flight f : flights) {
+            if (f.getFrom() == from && f.getTo() == to &&
+                    !f.getDate().isBefore(fromDate) && !f.getDate().isAfter(toDate)) {
+                result.add(f);
+            }
+        }
 
+        // 2️⃣ Generowanie seedowych lotów tylko jeśli nie mamy już ręcznych dla tej trasy i dnia
+        for (LocalDate date = fromDate; !date.isAfter(toDate); date = date.plusDays(1)) {
+            final LocalDate currentDate = date;  // <-- final
             DayOfWeek day = date.getDayOfWeek();
 
             for (Route route : routes) {
-
                 if (!route.connects(from, to)) continue;
                 if (!route.operatesOn(day)) continue;
 
-                result.addAll(generateFlightsForDay(route, from, to, date));
+                final Airport fromAirport = from;  // <-- final
+                final Airport toAirport = to;      // <-- final
+
+                boolean hasManualFlight = flights.stream().anyMatch(f ->
+                        f.getFrom() == fromAirport &&
+                                f.getTo() == toAirport &&
+                                f.getDate().equals(currentDate)
+                );
+
+                if (!hasManualFlight) {
+                    result.addAll(generateFlightsForDay(route, from, to, date));
+                }
             }
         }
+
+
+        result.sort(Comparator.comparing(Flight::getTime));
+
         return result;
     }
+
+
 
 
     // loty wte i we wte
@@ -54,10 +93,6 @@ public class FlightService {
 
         outbound.sort(Comparator.comparing(Flight::getTime));
         inbound.sort(Comparator.comparing(Flight::getTime));
-
-        System.out.println("OUTBOUND " + departureDate + " = " + outbound.size());
-        System.out.println("INBOUND  " + returnDate + " = " + inbound.size());
-
 
         return new RoundTripResult(departureDate, returnDate, outbound, inbound);
     }
@@ -115,6 +150,31 @@ public class FlightService {
         return 70 + r.nextInt(531);
     }
 
+    public List<Flight> getAllFlights() {
+        return new ArrayList<>(flights); // flights to twoja lista wszystkich lotów
+    }
 
+    public void initFlights() {
+        // opcjonalnie: wypełnienie listy początkowymi lotami
+        for (Route r : routes) {
+            flights.addAll(generateFlightsForDay(r, r.getA(), r.getB(), LocalDate.now()));
+        }
+    }
+
+
+    // Zwraca status lotu (ACTIVE / CANCELED)
+    public FlightStatus getStatus(Flight f) {
+        return flightStatuses.getOrDefault(FlightKey.fromFlight(f), FlightStatus.ACTIVE);}
+
+    // Dodaje lot
+    public void addFlight(Flight f) {flights.add(f);}
+
+    // Anuluje lot
+    public void cancelFlight(Flight f) {
+        flightStatuses.put(FlightKey.fromFlight(f), FlightStatus.CANCELED);}
+
+    // Przywraca anulowany lot
+    public void restoreFlight(Flight f) {
+        flightStatuses.remove(FlightKey.fromFlight(f));}
 
 }
