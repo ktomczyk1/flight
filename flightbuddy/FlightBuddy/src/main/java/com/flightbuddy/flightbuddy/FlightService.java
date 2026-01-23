@@ -158,14 +158,14 @@ public class FlightService {
         return all;
     }
 
-
+    /*
     public void initFlights() {
         // opcjonalnie: wypełnienie listy początkowymi lotami
         for (Route r : routes) {
             generatedFlights.addAll(generateFlightsForDay(r, r.getA(), r.getB(), LocalDate.now()));
         }
     }
-
+    */
 
     // Zwraca status lotu (ACTIVE / CANCELED)
     public FlightStatus getStatus(Flight f) {
