@@ -9,7 +9,8 @@ import java.util.*;
 public class FlightService {
 
     private final Map<FlightKey, FlightStatus> flightStatuses = new HashMap<>();
-    private final List<Flight> flights = new ArrayList<>();
+    private final List<Flight> manualFlights = new ArrayList<>();
+    private final List<Flight> generatedFlights = new ArrayList<>();
 
     private final List<Route> routes;
 
@@ -23,7 +24,7 @@ public class FlightService {
         for (LocalDate date = today; !date.isAfter(end); date = date.plusDays(1)) {
             for (Route route : routes) {
                 if (route.operatesOn(date.getDayOfWeek())) {
-                    flights.addAll(generateFlightsForDay(route, route.getA(), route.getB(), date));
+                    generatedFlights.addAll(generateFlightsForDay(route, route.getA(), route.getB(), date));
                 }
             }
         }
@@ -41,7 +42,7 @@ public class FlightService {
         List<Flight> result = new ArrayList<>();
 
         // 1️⃣ Dodaj ręcznie wprowadzone loty, które pasują do kryteriów
-        for (Flight f : flights) {
+        for (Flight f : manualFlights) {
             if (f.getFrom() == from && f.getTo() == to &&
                     !f.getDate().isBefore(fromDate) && !f.getDate().isAfter(toDate)) {
                 result.add(f);
@@ -60,7 +61,7 @@ public class FlightService {
                 final Airport fromAirport = from;  // <-- final
                 final Airport toAirport = to;      // <-- final
 
-                boolean hasManualFlight = flights.stream().anyMatch(f ->
+                boolean hasManualFlight = manualFlights.stream().anyMatch(f ->
                         f.getFrom() == fromAirport &&
                                 f.getTo() == toAirport &&
                                 f.getDate().equals(currentDate)
@@ -151,13 +152,17 @@ public class FlightService {
     }
 
     public List<Flight> getAllFlights() {
-        return new ArrayList<>(flights); // flights to twoja lista wszystkich lotów
+        List<Flight> all = new ArrayList<>();
+        all.addAll(generatedFlights);
+        all.addAll(manualFlights);
+        return all;
     }
+
 
     public void initFlights() {
         // opcjonalnie: wypełnienie listy początkowymi lotami
         for (Route r : routes) {
-            flights.addAll(generateFlightsForDay(r, r.getA(), r.getB(), LocalDate.now()));
+            generatedFlights.addAll(generateFlightsForDay(r, r.getA(), r.getB(), LocalDate.now()));
         }
     }
 
@@ -167,7 +172,7 @@ public class FlightService {
         return flightStatuses.getOrDefault(FlightKey.fromFlight(f), FlightStatus.ACTIVE);}
 
     // Dodaje lot
-    public void addFlight(Flight f) {flights.add(f);}
+    public void addFlight(Flight f) {manualFlights.add(f);}
 
     // Anuluje lot
     public void cancelFlight(Flight f) {

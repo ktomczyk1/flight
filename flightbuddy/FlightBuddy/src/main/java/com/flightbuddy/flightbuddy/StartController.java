@@ -946,10 +946,6 @@ public class StartController {
             showAlert("Sukces", "Lot dodany");
 
             stage.close();
-
-            // --- Odświeżenie listy w zarządzaniu lotami ---
-            Flight newFlight = new Flight(from, to, date, time, price);
-            flightService.addFlight(newFlight);
             showFlightManagement(content); // teraz content jest przekazany jako parametr
         });
 

@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,10 +17,30 @@ public class FlightsController {
     @FXML private Label titleLabel;
     @FXML private TextField searchField;
     @FXML private VBox flightsBox;
+    @FXML private DatePicker datePicker;
 
     private FlightService flightService;
     private Airport fromAirport;
     private List<Flight> allFlights = new ArrayList<>(); // Loty do filtrowania
+    private LocalDate selectedDate;
+
+    // INIT
+    @FXML public void initialize() {
+        selectedDate = LocalDate.now();
+        datePicker.setValue(selectedDate);
+
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+                selectedDate = newDate;
+                loadFlightsForSelectedDate();
+            }
+        });
+
+        searchField.textProperty().addListener(
+                (obs, oldVal, newVal) -> filterFlights(newVal)
+        );
+    }
+
 
     // ===================== SETTERY =====================
 
@@ -41,7 +62,7 @@ public class FlightsController {
         if (flightService == null || fromAirport == null) {
             return; // czekamy aż oba będą ustawione
         }
-        loadTodayFlights();
+        loadFlightsForSelectedDate();
     }
 
     // ===================== RYSOWANIE =====================
@@ -58,11 +79,28 @@ public class FlightsController {
         allFlights.sort(Comparator.comparing(Flight::getTime));
 
         // ustawiamy listener na TextField
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterFlights(newVal));
+        // searchField.textProperty().addListener((obs, oldVal, newVal) -> filterFlights(newVal));
 
         // początkowe wyświetlenie wszystkich lotów
         filterFlights("");
     }
+
+    // Wyświetla loty dla wybranej daty na mapie
+    private void loadFlightsForSelectedDate() {
+        allFlights.clear();
+
+        for (Airport to : Airport.values()) {
+            if (to == fromAirport) continue;
+            allFlights.addAll(
+                    flightService.searchFlights(fromAirport, to, selectedDate, selectedDate)
+            );
+        }
+
+        allFlights.sort(Comparator.comparing(Flight::getTime));
+
+        filterFlights(searchField.getText());
+    }
+
 
     private void filterFlights(String filter) {
         flightsBox.getChildren().clear();
