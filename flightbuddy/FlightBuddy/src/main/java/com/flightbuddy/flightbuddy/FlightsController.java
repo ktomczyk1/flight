@@ -1,6 +1,7 @@
 package com.flightbuddy.flightbuddy;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
@@ -18,6 +19,7 @@ public class FlightsController {
     @FXML private TextField searchField;
     @FXML private VBox flightsBox;
     @FXML private DatePicker datePicker;
+    @FXML private Button refreshButton;
 
     private FlightService flightService;
     private Airport fromAirport;
@@ -35,6 +37,8 @@ public class FlightsController {
                 loadFlightsForSelectedDate();
             }
         });
+
+        refreshButton.setOnAction(e -> loadFlightsForSelectedDate());
 
         searchField.textProperty().addListener(
                 (obs, oldVal, newVal) -> filterFlights(newVal)

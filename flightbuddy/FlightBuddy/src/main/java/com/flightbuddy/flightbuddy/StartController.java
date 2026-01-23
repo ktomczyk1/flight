@@ -5,8 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
@@ -17,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import com.flightbuddy.flightbuddy.Flight;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
@@ -440,6 +438,17 @@ public class StartController {
         showRoundTripResult(result);
     }
 
+    // Służy jako refresh przy anulowaniu lotów jako admin
+    private void safeRefreshSearch() {
+        if (!fromField.getText().trim().isEmpty()
+                && !toField.getText().trim().isEmpty()
+                && fromDatePicker.getValue() != null
+                && toDatePicker.getValue() != null) {
+            handleSearch();
+        }
+    }
+
+
 
     private void showRoundTripResult(RoundTripResult result) {
 
@@ -517,8 +526,18 @@ public class StartController {
         -fx-background-radius: 6;
     """);
 
+        if (flight.getStatus() == FlightStatus.CANCELLED) {
+            routeLabel.setTextFill(Color.RED);
+            dateLabel.setTextFill(Color.RED);
+            priceLabel.setTextFill(Color.RED);
+            box.setOnMouseClicked(null);
+        }
+
         return box;
     }
+
+
+
 
 
     private void showAlert(Alert.AlertType type, String title, String message) {
@@ -551,13 +570,27 @@ public class StartController {
 
     private VBox createOutboundFlightBox(Flight flight) {
         VBox box = createFlightBox(flight);
-        box.setOnMouseClicked(e -> selectOutbound(flight, box));
+
+        if (flight.getStatus() != FlightStatus.CANCELLED) {
+            box.setOnMouseClicked(e -> selectOutbound(flight, box));
+        } else {
+            box.setOpacity(0.5); // żeby anulowany lot wyglądał na niedostępny
+            box.setDisable(true);
+        }
+
         return box;
     }
 
     private VBox createInboundFlightBox(Flight flight) {
         VBox box = createFlightBox(flight);
-        box.setOnMouseClicked(e -> selectInbound(flight, box));
+
+        if (flight.getStatus() != FlightStatus.CANCELLED) {
+            box.setOnMouseClicked(e -> selectInbound(flight, box));
+        } else {
+            box.setOpacity(0.5); // żeby anulowany lot wyglądał na niedostępny
+            box.setDisable(true);
+        }
+
         return box;
     }
 
@@ -592,17 +625,15 @@ public class StartController {
 
         if (selectedOutbound == null || selectedInbound == null) return;
 
-        int total = selectedOutbound.getPrice() + selectedInbound.getPrice();
-
-        // Sprawdzenie, czy taki sam lot już istnieje
-        /* boolean alreadyBooked = loggedInUser.getBookings().stream()
-                .anyMatch(b -> b.getOutbound().equals(selectedOutbound)
-                        && b.getInbound().equals(selectedInbound));
-
-        if (alreadyBooked) {
-            showAlert("Błąd", "Ten lot został już zarezerwowany!");
+        // 🔒 sprawdzenie statusu
+        if (!selectedOutbound.isAvailable() || !selectedInbound.isAvailable()) {
+            showAlert(Alert.AlertType.WARNING,
+                    "Błąd",
+                    "Ten lot został anulowany!");
             return;
-        } */
+        }
+
+        int total = selectedOutbound.getPrice() + selectedInbound.getPrice();
 
         // Tworzymy rezerwację
         Booking booking = new Booking(selectedOutbound, selectedInbound);
@@ -639,8 +670,10 @@ public class StartController {
         );
 
         showAlert(Alert.AlertType.INFORMATION, "Rezerwacja", summary);
-
     }
+
+
+
 
 
     // Pop-upy
@@ -674,6 +707,8 @@ public class StartController {
                                 + b.getOutbound().getFrom().getDisplayName()
                                 + " → " + b.getOutbound().getTo().getDisplayName()
                 );
+                if (b.getOutbound().getStatus() == FlightStatus.CANCELLED)
+                {outboundLabel.setTextFill(Color.RED);}
 
                 Label inboundLabel = new Label(
                         "Powrót: " + b.getInbound().getDate() + " "
@@ -681,6 +716,8 @@ public class StartController {
                                 + b.getInbound().getFrom().getDisplayName()
                                 + " → " + b.getInbound().getTo().getDisplayName()
                 );
+                if (b.getInbound().getStatus() == FlightStatus.CANCELLED)
+                {inboundLabel.setTextFill(Color.RED);}
 
                 flightBox.getChildren().addAll(outboundLabel, inboundLabel);
                 flightBox.setStyle("""
@@ -701,7 +738,7 @@ public class StartController {
     }
 
 
-    // Panel admina
+    // PANEL ADMINA !!!!!!!!!!!!!!!!!!!!!!!!
     private void openAdminToolsWindow() {
         Stage stage = new Stage();
         stage.setTitle("Narzędzia Administratora");
@@ -845,17 +882,26 @@ public class StartController {
                 Label flightLabel = new Label(line);
                 flightLabel.setPrefWidth(400);
 
-                Button editButton = new Button("Edytuj");
-                editButton.setDisable(true); // na razie wyłączony
-
                 Button toggleButton = new Button(status == FlightStatus.AVAILABLE ? "Anuluj" : "Przywróć");
                 toggleButton.setOnAction(ev -> {
-                    if (status == FlightStatus.AVAILABLE) flightService.cancelFlight(f);
-                    else flightService.restoreFlight(f);
+                    if (status == FlightStatus.AVAILABLE)
+                    {
+                        flightService.cancelFlight(f);
+                        safeRefreshSearch();
+                        // Służy jako search, ale nie pokazuje komunikatu, że pola niewypełnione
+                    }
+                    else
+                    {
+                        flightService.restoreFlight(f);
+                        safeRefreshSearch();
+                        // Służy jako search, ale nie pokazuje komunikatu, że pola niewypełnione
+                    }
                     refreshFlights[0].run();
                 });
 
-                HBox row = new HBox(10, flightLabel, editButton, toggleButton);
+                Region odstep = new Region(); // Odstęp między info o locie a przyciskiem Anuluj/Przywróć
+                HBox.setHgrow(odstep, Priority.ALWAYS);
+                HBox row = new HBox(10, flightLabel, odstep, toggleButton);
                 row.setPadding(new Insets(5));
                 row.setStyle("-fx-border-color: lightgray; -fx-background-color: #f9f9f9; -fx-border-radius: 6; -fx-background-radius: 6;");
 
