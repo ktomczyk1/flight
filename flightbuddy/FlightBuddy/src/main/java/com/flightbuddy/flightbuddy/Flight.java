@@ -23,7 +23,7 @@ public class Flight {
         this.date = date;
         this.time = time;
         this.price = price;
-        this.status = FlightStatus.ACTIVE;
+        this.status = FlightStatus.AVAILABLE;
     }
 
     public UUID getId() { return id; }
@@ -33,7 +33,7 @@ public class Flight {
     public LocalTime getTime() { return time; }
     public int getPrice() { return price; }
     public FlightStatus getStatus() {return status;}
-    public boolean isActive() {return status == FlightStatus.ACTIVE;}
-    public void cancel() {this.status = FlightStatus.CANCELED;} // Anuluje lot
-    public void restore() {this.status = FlightStatus.ACTIVE;}  // Przywraca anulowany lot
+    public boolean isAvailable() {return status == FlightStatus.AVAILABLE;}
+    public void cancel() {this.status = FlightStatus.CANCELLED;} // Anuluje lot
+    public void restore() {this.status = FlightStatus.AVAILABLE;}  // Przywraca anulowany lot
 }

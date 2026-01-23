@@ -167,16 +167,16 @@ public class FlightService {
     }
     */
 
-    // Zwraca status lotu (ACTIVE / CANCELED)
+    // Zwraca status lotu (AVAILABLE / CANCELLED)
     public FlightStatus getStatus(Flight f) {
-        return flightStatuses.getOrDefault(FlightKey.fromFlight(f), FlightStatus.ACTIVE);}
+        return flightStatuses.getOrDefault(FlightKey.fromFlight(f), FlightStatus.AVAILABLE);}
 
     // Dodaje lot
     public void addFlight(Flight f) {manualFlights.add(f);}
 
     // Anuluje lot
     public void cancelFlight(Flight f) {
-        flightStatuses.put(FlightKey.fromFlight(f), FlightStatus.CANCELED);}
+        flightStatuses.put(FlightKey.fromFlight(f), FlightStatus.CANCELLED);}
 
     // Przywraca anulowany lot
     public void restoreFlight(Flight f) {

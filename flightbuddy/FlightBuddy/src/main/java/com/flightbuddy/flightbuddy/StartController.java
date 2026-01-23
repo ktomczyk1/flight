@@ -783,18 +783,24 @@ public class StartController {
         HBox searchBar = new HBox(10);
 
         TextField fromField = new TextField();
-        fromField.setPromptText("Miasto wylotowe (3+ litery)");
-        fromField.setPrefWidth(200);
+        fromField.setPromptText("Miasto wylotowe");
+        fromField.setPrefWidth(150);
+        setupAirportAutocomplete(fromField);
 
         TextField toField = new TextField();
-        toField.setPromptText("Miasto przylotowe (3+ litery)");
-        toField.setPrefWidth(200);
+        toField.setPromptText("Miasto przylotowe");
+        toField.setPrefWidth(150);
+        setupAirportAutocomplete(toField);
 
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("Wybierz datę odlotu");
         datePicker.setPrefWidth(150);
 
-        searchBar.getChildren().addAll(fromField, toField, datePicker);
+        Button refreshButton = new Button("Odśwież");
+        final Runnable[] refreshFlights = new Runnable[1];
+        refreshButton.setOnAction(e -> refreshFlights[0].run());
+
+        searchBar.getChildren().addAll(fromField, toField, datePicker, refreshButton);
         content.getChildren().add(searchBar);
 
         // --- Miejsce na wyniki ---
@@ -803,7 +809,6 @@ public class StartController {
         content.getChildren().add(flightsList);
 
         // --- Runnable do odświeżania listy lotów ---
-        final Runnable[] refreshFlights = new Runnable[1];
         refreshFlights[0] = () -> {
             flightsList.getChildren().clear();
 
@@ -819,11 +824,16 @@ public class StartController {
                             && f.getDate().equals(dateFilter))
                     .toList();
 
+            if (filtered.isEmpty()) {
+                flightsList.getChildren().add(new Label("Nie znaleziono lotów dla podanych kryteriów"));
+                return;
+            }
+
             for (Flight f : filtered) {
                 FlightStatus status = flightService.getStatus(f);
 
                 String line = String.format(
-                        "%s %s %s → %s | Cena: %d zł | Status: %s",
+                        "%s %s %s → %s | Cena: %d zł \nStatus: %s",
                         f.getDate(),
                         f.getTime(),
                         f.getFrom().getDisplayName(),
@@ -838,9 +848,9 @@ public class StartController {
                 Button editButton = new Button("Edytuj");
                 editButton.setDisable(true); // na razie wyłączony
 
-                Button toggleButton = new Button(status == FlightStatus.ACTIVE ? "Anuluj" : "Przywróć");
+                Button toggleButton = new Button(status == FlightStatus.AVAILABLE ? "Anuluj" : "Przywróć");
                 toggleButton.setOnAction(ev -> {
-                    if (status == FlightStatus.ACTIVE) flightService.cancelFlight(f);
+                    if (status == FlightStatus.AVAILABLE) flightService.cancelFlight(f);
                     else flightService.restoreFlight(f);
                     refreshFlights[0].run();
                 });
@@ -946,7 +956,6 @@ public class StartController {
             showAlert("Sukces", "Lot dodany");
 
             stage.close();
-            showFlightManagement(content); // teraz content jest przekazany jako parametr
         });
 
         root.getChildren().addAll(fromField, toField, datePicker, timeField, priceField, addButton);
@@ -967,7 +976,7 @@ public class StartController {
             }
 
             List<Airport> matches = Arrays.stream(Airport.values())
-                    .filter(a -> a.getDisplayName().toLowerCase().contains(newText.toLowerCase()))
+                    .filter(a -> a.getDisplayName().toLowerCase().startsWith(newText.toLowerCase()))
                     .toList();
 
             if (matches.isEmpty()) {

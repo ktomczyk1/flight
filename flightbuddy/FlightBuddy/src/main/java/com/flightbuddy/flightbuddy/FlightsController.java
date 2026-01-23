@@ -124,10 +124,10 @@ public class FlightsController {
             // Informacje o locie i dopisek, jeśli anulowany
             String text = "✈ " + f.getTime().format(timeFmt)
                     + " → " + f.getTo().getDisplayName();
-            if (status == FlightStatus.CANCELED) {text += " (ANULOWANY)";}
+            if (status == FlightStatus.CANCELLED) {text += " (ANULOWANY)";}
             Label flightLabel = new Label(text);
 
-            if (status == FlightStatus.CANCELED) {
+            if (status == FlightStatus.CANCELLED) {
                 flightLabel.setStyle("""
             -fx-padding: 8;
             -fx-border-color: red;
