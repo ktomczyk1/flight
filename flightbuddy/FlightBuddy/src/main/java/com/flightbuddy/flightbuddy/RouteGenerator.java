@@ -9,33 +9,33 @@ public class RouteGenerator {
     private static final double CONNECTION_PROBABILITY = 1.0; // testowo 100%
 
     public List<Route> generateRoutes(List<Airport> airports) {
-
         List<Route> routes = new ArrayList<>();
 
-        for (int i = 0; i < airports.size(); i++) {
-            for (int j = i + 1; j < airports.size(); j++) {
-
-                Airport a = airports.get(i);
-                Airport b = airports.get(j);
-
+        for (Airport a : airports) {
+            for (Airport b : airports) {
                 if (a == b) continue;
-
                 if (!isConnectionAllowed(a, b)) continue;
-
                 if (RANDOM.nextDouble() > CONNECTION_PROBABILITY) continue;
 
-                Set<DayOfWeek> days = randomOperatingDays();
-                int flightsPerDay = randomFlightsPerDay();
+                // Generujemy trasę osobno dla każdego dnia tygodnia
+                for (DayOfWeek day : DayOfWeek.values()) {
 
-                routes.add(new Route(a, b, days, flightsPerDay));
+                    // Każdy dzień ma losową liczbę lotów 1-4
+                    int flightsPerDay = 1 + RANDOM.nextInt(4);
+
+                    // Tworzymy trasę tylko dla tego dnia
+                    Set<DayOfWeek> daySet = new HashSet<>();
+                    daySet.add(day);
+
+                    routes.add(new Route(a, b, daySet, flightsPerDay));
+                }
             }
         }
 
-        // DEBUG – możesz potem usunąć
-        System.out.println("Generated routes: " + routes.size());
-
+        System.out.println("Utworzone trasy: " + routes.size());
         return routes;
     }
+
 
     // ===================== REGUŁY POLITYCZNE =====================
 

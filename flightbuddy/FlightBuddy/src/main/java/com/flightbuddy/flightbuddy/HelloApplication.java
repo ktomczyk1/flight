@@ -14,7 +14,8 @@ public class HelloApplication extends Application {
                 getClass().getResource("/start-view.fxml")
         );
 
-        Scene scene = new Scene(loader.load(), 1200, 600);
+        // Defaultowo były wymiary: 1200 x 600
+        Scene scene = new Scene(loader.load(), 1200, 700);
         stage.setTitle("FlightBuddy");
         stage.setResizable(false);
         stage.setScene(scene);
