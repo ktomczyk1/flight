@@ -51,7 +51,7 @@ public class RouteGenerator {
     }
 
     // ===================== DNI OPEROWANIA =====================
-
+    /*
     private Set<DayOfWeek> randomOperatingDays() {
 
         // KAŻDA trasa ma co najmniej 1 dzień
@@ -76,6 +76,7 @@ public class RouteGenerator {
                 )
         );
     }
+    */
 
     // ===================== UTILITY =====================
 

@@ -15,11 +15,11 @@ public class FlightService {
     public FlightService(List<Route> routes) {
         this.routes = routes;
 
-        // wygenerowanie wszystkich lotów z tras na najbliższe dni (np. 30 dni)
-        LocalDate today = LocalDate.now();
-        LocalDate end = today.plusDays(30);
+        // wygenerowanie wszystkich lotów od 1 stycznia do 31 marca
+        LocalDate start = LocalDate.of(2026, 1, 1);
+        LocalDate end = LocalDate.of(2026, 3, 31);
 
-        for (LocalDate date = today; !date.isAfter(end); date = date.plusDays(1)) {
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
             for (Route route : routes) {
                 if (route.operatesOn(date.getDayOfWeek())) {
                     generatedFlights.addAll(generateFlightsForDay(route, route.getA(), route.getB(), date));

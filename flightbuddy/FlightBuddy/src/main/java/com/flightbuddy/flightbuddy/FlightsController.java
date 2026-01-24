@@ -70,7 +70,7 @@ public class FlightsController {
     }
 
     // ===================== RYSOWANIE =====================
-
+    /*
     private void loadTodayFlights() {
         LocalDate today = LocalDate.now();
         allFlights.clear();
@@ -87,7 +87,7 @@ public class FlightsController {
 
         // początkowe wyświetlenie wszystkich lotów
         filterFlights("");
-    }
+    } */
 
     // Wyświetla loty dla wybranej daty na mapie
     private void loadFlightsForSelectedDate() {
