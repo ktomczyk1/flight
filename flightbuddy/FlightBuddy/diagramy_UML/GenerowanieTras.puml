@@ -1,0 +1,14 @@
+@startuml
+participant Launcher
+participant RouteGenerator
+participant Route
+participant Airport
+
+Launcher -> RouteGenerator : generateRoutes(airports)
+loop dla każdej pary lotnisk
+    RouteGenerator -> RouteGenerator : isConnectionAllowed(a,b)
+    RouteGenerator -> Route : new Route(a, b, daySet, flightsPerDay)
+end
+RouteGenerator --> Launcher : List<Route>
+
+@enduml

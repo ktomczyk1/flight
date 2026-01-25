@@ -1,0 +1,15 @@
+@startuml
+actor Użytkownik
+participant CountryController
+participant FXMLLoader
+participant FlightsController
+participant FlightService
+
+Użytkownik -> CountryController : klik lotnisko
+CountryController -> FXMLLoader : load flights-view.fxml
+FXMLLoader -> FlightsController : initialize()
+CountryController -> FlightsController : setFlightService()
+CountryController -> FlightsController : setFromAirport()
+FlightsController -> FlightService : searchFlights()
+FlightsController -> Użytkownik : lista lotów
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+actor Użytkownik
+participant Controller
+participant FlightService
+participant RoundTripResult
+
+Użytkownik -> Controller : szukaj lotu tam i z powrotem
+Controller -> FlightService : searchRoundTripOnExactDates()
+FlightService -> FlightService : searchFlights(outbound)
+FlightService -> FlightService : searchFlights(inbound)
+FlightService -> RoundTripResult : new RoundTripResult()
+FlightService --> Controller : RoundTripResult
+@enduml

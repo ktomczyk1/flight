@@ -1,0 +1,17 @@
+@startuml
+actor Użytkownik
+participant StartController
+participant UserService
+participant User
+
+Użytkownik -> StartController : rejestracja(dane)
+StartController -> UserService : register(User)
+UserService -> UserService : sprawdzenie email / phone
+alt dane unikalne
+    UserService -> UserService : dodanie użytkownika
+    UserService --> StartController : true
+else konflikt danych
+    UserService --> StartController : false
+end
+StartController -> Użytkownik : komunikat
+@enduml

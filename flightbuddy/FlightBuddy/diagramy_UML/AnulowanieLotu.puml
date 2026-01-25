@@ -1,0 +1,14 @@
+@startuml
+actor Administrator
+participant StartController
+participant FlightService
+participant FlightKey
+participant Flight
+
+Administrator -> StartController : anuluj lot
+StartController -> FlightService : cancelFlight(flight)
+FlightService -> Flight : cancel()
+FlightService -> FlightKey : fromFlight()
+FlightService -> FlightService : zapis statusu CANCELLED
+
+@enduml

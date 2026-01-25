@@ -1,0 +1,98 @@
+@startuml
+actor Użytkownik
+actor Administrator
+
+participant Launcher
+participant HelloApplication
+participant StartController
+participant UserService
+participant User
+participant FlightService
+participant RouteGenerator
+participant CountryController
+participant FlightsController
+participant Booking
+
+== Start aplikacji ==
+Launcher -> HelloApplication : start()
+HelloApplication -> RouteGenerator : generateRoutes()
+RouteGenerator --> HelloApplication : List<Route>
+HelloApplication -> FlightService : new(routes)
+HelloApplication -> StartController : load start-view
+
+== Logowanie / Rejestracja ==
+group Rejestracja
+    Użytkownik -> StartController : dane rejestracyjne
+    StartController -> UserService : register(User)
+    alt email/telefon zajęty
+        UserService --> StartController : false
+        StartController -> Użytkownik : błąd
+    else OK
+        UserService --> StartController : true
+        StartController -> Użytkownik : konto utworzone
+    end
+end
+
+group Logowanie
+    Użytkownik -> StartController : email + hasło
+    StartController -> UserService : login()
+    alt błędne dane
+        UserService --> StartController : null
+        StartController -> Użytkownik : błąd
+    else poprawne
+        UserService --> StartController : User
+        StartController -> Użytkownik : zalogowany
+    end
+end
+
+== Mapa i kraje ==
+Użytkownik -> StartController : klik "Mapa"
+StartController -> CountryController : load mapa Europy
+
+Użytkownik -> CountryController : wybór kraju
+CountryController -> CountryController : initialize()
+
+== Lotniska ==
+Użytkownik -> CountryController : klik lotnisko
+CountryController -> FlightsController : openFlightsView()
+FlightsController -> FlightService : setFlightService()
+FlightsController -> FlightsController : setFromAirport()
+
+== Wyszukiwanie lotów ==
+FlightsController -> FlightService : searchFlights(from, to, date)
+FlightService -> FlightService : generatedFlights + manualFlights
+FlightService --> FlightsController : List<Flight>
+FlightsController -> Użytkownik : lista lotów
+
+== Rezerwacja ==
+Użytkownik -> StartController : wybór lotu wylotowego
+Użytkownik -> StartController : wybór lotu powrotnego
+StartController -> Booking : new(outbound, inbound)
+StartController -> User : addBooking()
+
+== Twoje loty ==
+Użytkownik -> StartController : klik "Twoje loty"
+StartController -> User : getBookings()
+User --> StartController : List<Booking>
+StartController -> Użytkownik : lista rezerwacji
+
+== Administrator ==
+group Zarządzanie lotami
+    Administrator -> StartController : dodaj lot
+    StartController -> FlightService : addFlight()
+
+    Administrator -> StartController : anuluj lot
+    StartController -> FlightService : cancelFlight()
+
+    Administrator -> StartController : przywróć lot
+    StartController -> FlightService : restoreFlight()
+end
+
+group Zarządzanie użytkownikami
+    Administrator -> StartController : usuń użytkownika(email)
+    StartController -> UserService : removeUserByEmail()
+    UserService --> StartController : true/false
+    StartController -> Administrator : wynik
+end
+
+@enduml

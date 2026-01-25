@@ -1,0 +1,14 @@
+@startuml
+actor Użytkownik
+participant StartController
+participant FXMLLoader
+participant CountryController
+participant FlightService
+
+Użytkownik -> StartController : klik "Mapa"
+StartController -> FXMLLoader : load map view
+FXMLLoader -> CountryController : initialize()
+CountryController -> FlightService : setFlightService()
+CountryController -> Użytkownik : widok kraju
+
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+actor Administrator
+participant StartController
+participant UserService
+participant User
+
+Administrator -> StartController : usuń użytkownika(email)
+StartController -> UserService : removeUserByEmail(email)
+UserService -> UserService : wyszukanie użytkownika
+UserService -> User : remove
+UserService --> StartController : true / false
+StartController -> Administrator : komunikat
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+actor Administrator
+participant StartController
+participant FlightService
+participant FlightKey
+participant Flight
+
+Administrator -> StartController : przywróć lot
+StartController -> FlightService : restoreFlight(flight)
+FlightService -> Flight : restore()
+FlightService -> FlightKey : fromFlight()
+FlightService -> FlightService : usunięcie statusu z mapy
+@enduml

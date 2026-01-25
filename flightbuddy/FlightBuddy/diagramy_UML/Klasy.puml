@@ -1,0 +1,104 @@
+@startuml
+class Flight {
+  - UUID id
+  - Airport from
+  - Airport to
+  - LocalDate date
+  - LocalTime time
+  - int price
+  - FlightStatus status
+  + cancel()
+  + restore()
+  + isAvailable()
+}
+
+class FlightKey {
+  - Airport from
+  - Airport to
+  - LocalDate date
+  - LocalTime time
+  + fromFlight(flight)
+}
+
+class Route {
+  - Airport a
+  - Airport b
+  - Set<DayOfWeek> operatingDays
+  - int flightsPerDay
+  + operatesOn(day)
+}
+
+class Booking {
+  - Flight outbound
+  - Flight inbound
+}
+
+class User {
+  - String firstName
+  - String lastName
+  - String email
+  - String phone
+  - String password
+  - Role role
+  - List<Booking> bookings
+  + addBooking()
+}
+
+class RoundTripResult {
+  - LocalDate departureDate
+  - LocalDate returnDate
+  - List<Flight> outboundFlights
+  - List<Flight> inboundFlights
+}
+
+class FlightService {
+  - Map<FlightKey, FlightStatus> flightStatuses
+  - List<Flight> generatedFlights
+  - List<Flight> manualFlights
+  - List<Route> routes
+  + searchFlights()
+  + searchRoundTripOnExactDates()
+  + cancelFlight()
+  + restoreFlight()
+}
+
+class UserService {
+  - List<User> users
+  + register()
+  + login()
+  + removeUserByEmail()
+}
+
+class RouteGenerator {
+  + generateRoutes()
+}
+
+enum FlightStatus {
+  AVAILABLE
+  CANCELLED
+}
+
+enum Airport {
+ - String displayName
+ - String country
+ + getCountry()
+ + getDisplayName()
+ + fromDisplayName()
+}
+
+User "1" o-- "*" Booking
+Booking "1" o-- "1" Flight : outbound
+Booking "1" o-- "1" Flight : inbound
+
+FlightService --> Flight
+FlightService --> FlightKey
+FlightService --> Route
+FlightService --> RoundTripResult
+
+Route --> Airport
+Flight --> Airport
+
+RouteGenerator --> Route
+UserService --> User
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+actor Użytkownik
+actor Administrator
+
+Użytkownik --> (Wyszukiwanie lotów)
+Użytkownik --> (Rezerwacja lotu)
+Użytkownik --> (Logowanie / wylogowanie)
+Użytkownik --> (Rejestracja)
+
+Administrator --> (Wyszukiwanie lotów)
+Administrator --> (Rezerwacja lotu)
+Administrator --> (Logowanie / wylogowanie)
+Administrator --> (Dodawanie lotu)
+Administrator --> (Anulowanie lotu)
+Administrator --> (Przywracanie lotu)
+Administrator --> (Zarządzanie użytkownikami)
+@enduml

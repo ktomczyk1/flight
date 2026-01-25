@@ -1,0 +1,15 @@
+@startuml
+participant FlightService
+participant Route
+participant Flight
+participant FlightKey
+
+FlightService -> Route : operatesOn(day)
+loop dla dni i tras
+    FlightService -> FlightService : generateFlightsForDay()
+    FlightService -> Flight : new Flight()
+    FlightService -> FlightKey : fromFlight()
+    FlightService -> Flight : ustaw status
+end
+
+@enduml

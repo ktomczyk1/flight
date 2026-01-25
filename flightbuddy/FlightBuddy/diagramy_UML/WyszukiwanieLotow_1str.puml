@@ -1,0 +1,13 @@
+@startuml
+actor Użytkownik
+participant FlightsController
+participant FlightService
+participant Flight
+
+Użytkownik -> FlightsController : wybór daty i lotniska
+FlightsController -> FlightService : searchFlights(from, to, date)
+FlightService -> FlightService : przeszukanie manualFlights
+FlightService -> FlightService : przeszukanie generatedFlights
+FlightService --> FlightsController : List<Flight>
+FlightsController -> Użytkownik : lista lotów
+@enduml

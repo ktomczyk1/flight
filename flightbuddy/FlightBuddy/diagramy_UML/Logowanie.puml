@@ -1,0 +1,12 @@
+@startuml
+actor Użytkownik
+participant StartController
+participant UserService
+participant User
+
+Użytkownik -> StartController : login(email, password)
+StartController -> UserService : login(email, password)
+UserService -> User : sprawdzenie danych
+UserService --> StartController : User / null
+StartController -> Użytkownik : informacja o sukcesie / błędzie
+@enduml

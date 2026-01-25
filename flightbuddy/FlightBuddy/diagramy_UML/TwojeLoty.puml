@@ -1,0 +1,19 @@
+@startuml
+actor Użytkownik
+participant StartController
+participant User
+participant Booking
+participant Flight
+
+Użytkownik -> StartController : klik "Twoje loty"
+StartController -> User : getBookings()
+User --> StartController : List<Booking>
+
+loop dla każdej rezerwacji
+    StartController -> Booking : getOutbound()
+    StartController -> Booking : getInbound()
+    Booking -> Flight : dane lotu
+end
+
+StartController -> Użytkownik : lista lotów
+@enduml
