@@ -46,7 +46,7 @@ Stolica: Rzym
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button mxp = new Button("Mediolan (MXP)");
         Button fco = new Button("Rzym (FCO)");
         Button vce = new Button("Wenecja (VCE)");

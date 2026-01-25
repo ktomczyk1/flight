@@ -46,7 +46,7 @@ Stolica: Praga
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button prg = new Button("Praga (PRG)");
 
         prg.setOnAction(e -> openFlightsView(Airport.PRG));

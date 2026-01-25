@@ -46,7 +46,7 @@ Stolica: Berlin
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button ber = new Button("Berlin (BER)");
         Button muc = new Button("Monachium (MUC)");
         Button ham = new Button("Hamburg (HAM)");

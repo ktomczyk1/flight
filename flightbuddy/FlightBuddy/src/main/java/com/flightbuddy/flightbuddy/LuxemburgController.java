@@ -46,7 +46,7 @@ Stolica: Luksemburg
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button lux = new Button("Luksemburg (LUX)");
 
         lux.setOnAction(e -> openFlightsView(Airport.LUX));

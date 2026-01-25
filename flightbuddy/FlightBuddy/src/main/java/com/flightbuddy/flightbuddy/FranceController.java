@@ -46,7 +46,7 @@ Stolica: Paryż
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button cdg = new Button("Paryż (CDG)");
         Button mrs = new Button("Marsylia (MRS)");
         Button nce = new Button("Nicea (NCE)");

@@ -46,7 +46,7 @@ Stolica: Zagrzeb
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button spu = new Button("Split (SPU)");
         Button zag = new Button("Zagrzeb (ZAG)");
 

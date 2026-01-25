@@ -47,7 +47,6 @@ Stolica: Mińsk
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
         Button msq = new Button("Mińsk (MSQ)");
 
         msq.setOnAction(e -> openFlightsView(Airport.MSQ));

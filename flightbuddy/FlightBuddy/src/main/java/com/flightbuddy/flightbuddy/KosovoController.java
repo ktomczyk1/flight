@@ -46,7 +46,7 @@ Stolica: Prisztina
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button prn = new Button("Prisztina (PRN)");
 
         prn.setOnAction(e -> openFlightsView(Airport.PRN));

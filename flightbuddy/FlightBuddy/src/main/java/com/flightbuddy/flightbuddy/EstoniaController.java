@@ -46,7 +46,7 @@ Stolica: Tallin
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button ttl = new Button("Tallin");
 
         ttl.setOnAction(e -> openFlightsView(Airport.TTL));

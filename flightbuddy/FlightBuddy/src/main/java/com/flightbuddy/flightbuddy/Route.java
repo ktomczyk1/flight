@@ -29,7 +29,6 @@ public class Route {
         return b;
     }
 
-    // 🔑 KLUCZOWA POPRAWKA
     public boolean connects(Airport from, Airport to) {
         return (a == from && b == to)
                 || (a == to && b == from);

@@ -34,7 +34,6 @@ public class AustriaController {
                 )
         );
 
-        // === INFO ===
         Label title = new Label("Austria");
         title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
@@ -46,7 +45,6 @@ Stolica: Wiedeń
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
         Button vie = new Button("Wiedeń (VIE)");
         Button inn = new Button("Innsbruck (INN)");
 
@@ -58,7 +56,6 @@ Stolica: Wiedeń
         vie.setMaxWidth(Double.MAX_VALUE);
         inn.setMaxWidth(Double.MAX_VALUE);
 
-        // === WYPEŁNIENIE PANELU ===
         airportsView = new VBox(10);
         airportsView.getChildren().addAll(
                 title,

@@ -46,7 +46,7 @@ Stolica: Wilno
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button cph = new Button("Wilno (VNO)");
 
         cph.setOnAction(e -> openFlightsView(Airport.VNO));

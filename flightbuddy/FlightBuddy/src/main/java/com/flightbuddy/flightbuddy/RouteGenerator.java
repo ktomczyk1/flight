@@ -37,7 +37,7 @@ public class RouteGenerator {
     }
 
 
-    // ===================== REGUŁY POLITYCZNE =====================
+    // rosja
 
     private boolean isConnectionAllowed(Airport a, Airport b) {
         boolean aRussia = "Rosja".equalsIgnoreCase(a.getCountry());
@@ -50,35 +50,6 @@ public class RouteGenerator {
         return true;
     }
 
-    // ===================== DNI OPEROWANIA =====================
-    /*
-    private Set<DayOfWeek> randomOperatingDays() {
-
-        // KAŻDA trasa ma co najmniej 1 dzień
-        int daysCount = 1 + RANDOM.nextInt(7);
-
-        List<DayOfWeek> allDays =
-                new ArrayList<>(List.of(DayOfWeek.values()));
-
-        Collections.shuffle(allDays, RANDOM);
-
-        return new HashSet<>(allDays.subList(0, daysCount));
-    }
-
-    // ===================== LICZBA LOTÓW =====================
-
-    private int randomFlightsPerDay() {
-        return weightedRandom(
-                Map.of(
-                        1, 50,
-                        2, 35,
-                        3, 15
-                )
-        );
-    }
-    */
-
-    // ===================== UTILITY =====================
 
     private int weightedRandom(Map<Integer, Integer> weights) {
 

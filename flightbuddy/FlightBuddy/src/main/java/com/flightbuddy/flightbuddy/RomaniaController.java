@@ -46,7 +46,7 @@ Stolica: Bukareszt
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button otp = new Button("Bukareszt (OTP)");
         Button sbz = new Button("Sybin (SBZ)");
         Button ias = new Button("Jassy (IAS)");

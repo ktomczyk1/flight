@@ -46,7 +46,7 @@ Stolica: Warszawa
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button waw = new Button("Warszawa Chopina (WAW)");
         Button krk = new Button("Kraków Balice (KRK)");
         Button gdn = new Button("Gdańsk (GDN)");

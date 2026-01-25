@@ -46,7 +46,7 @@ Stolica: Lublana
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button lju = new Button("Lublana (LJU)");
 
         lju.setOnAction(e -> openFlightsView(Airport.LJU));

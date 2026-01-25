@@ -46,7 +46,7 @@ Stolica: Budapeszt
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button bud = new Button("Budapeszt (BUD)");
 
         bud.setOnAction(e -> openFlightsView(Airport.BUD));

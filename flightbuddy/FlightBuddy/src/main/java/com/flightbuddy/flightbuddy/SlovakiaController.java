@@ -46,7 +46,7 @@ Stolica: Bratysława
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button bts = new Button("Bratysława (BTS)");
 
         bts.setOnAction(e -> openFlightsView(Airport.BTS));

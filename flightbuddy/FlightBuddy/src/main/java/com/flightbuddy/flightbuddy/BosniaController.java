@@ -47,7 +47,7 @@ Stolica: Sarajewo
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button sjj = new Button("Sarajewo (SJJ)");
 
         sjj.setOnAction(e -> openFlightsView(Airport.SJJ));

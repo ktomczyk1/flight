@@ -46,7 +46,7 @@ Stolica: Ateny
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button ath = new Button("Ateny (ATH)");
         Button skg = new Button("Saloniki (SKG)");
         Button chq = new Button("Chania (CHQ)");

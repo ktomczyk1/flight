@@ -45,7 +45,7 @@ Stolica: Oslo
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button osl = new Button("Oslo (OSL)");
         Button bgo = new Button("Bergen (BGO)");
 

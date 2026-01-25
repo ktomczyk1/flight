@@ -46,7 +46,7 @@ Stolica: Helsinki
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button hel = new Button("Helsinki (HEL)");
         Button oul = new Button("Oulu (OUL)");
 

@@ -45,7 +45,7 @@ Stolica: Podgorica
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button tgd = new Button("Podgorica (TGD)");
 
         tgd.setOnAction(e -> openFlightsView(Airport.TGD));

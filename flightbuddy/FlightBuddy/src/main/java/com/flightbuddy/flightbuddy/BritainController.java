@@ -46,7 +46,7 @@ Stolica: Londyn
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button lhr = new Button("Londyn (LHR)");
         Button man = new Button("Manchester (MAN)");
         Button edi = new Button("Edynburg (EDI)");

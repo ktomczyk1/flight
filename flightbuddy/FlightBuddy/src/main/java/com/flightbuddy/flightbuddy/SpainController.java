@@ -46,7 +46,7 @@ Stolica: Madryt
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button mad = new Button("Madryt (MAD)");
         Button agp = new Button("Malaga (AGP)");
         Button bcn = new Button("Barcelona (BCN)");

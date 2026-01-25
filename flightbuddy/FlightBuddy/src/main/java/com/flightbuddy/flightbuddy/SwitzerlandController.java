@@ -45,7 +45,7 @@ Stolica: Zurych
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button zrh = new Button("Zurych (ZRH)");
 
         zrh.setOnAction(e -> openFlightsView(Airport.ZRH));

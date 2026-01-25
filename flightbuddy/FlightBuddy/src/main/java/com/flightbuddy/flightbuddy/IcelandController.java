@@ -46,7 +46,7 @@ Stolica: Reykjavik
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button rkv = new Button("Reykjavik (RKV)");
 
         rkv.setOnAction(e -> openFlightsView(Airport.RKV));

@@ -21,7 +21,7 @@ public class HelloController {
     @FXML
     private Pane mapPane;
 
-    // 🔑 JEDEN WSPÓLNY SERWIS LOTÓW
+    // JEDEN WSPÓLNY SERWIS LOTÓW
     private FlightService flightService;
 
     public void setFlightService(FlightService flightService) {
@@ -2810,10 +2810,8 @@ public class HelloController {
 
             Scene scene = new Scene(loader.load(), 900, 600);
 
-            // 🔑 POBIERAMY CONTROLLERA KRAJU
             Object controller = loader.getController();
 
-            // 🔥 PRZEKAZUJEMY TEN SAM FlightService
             if (controller instanceof BulgariaController bc) {
                 bc.setFlightService(flightService);
             }
@@ -2844,10 +2842,8 @@ public class HelloController {
 
             Scene scene = new Scene(loader.load(), 1200, 600);
 
-            // 🔑 KLUCZ: POBIERAMY CONTROLLERA
             PolandController controller = loader.getController();
 
-            // 🔥 KLUCZ: PRZEKAZUJEMY TEN SAM FlightService
             controller.setFlightService(flightService);
 
             Stage stage = new Stage();

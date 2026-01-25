@@ -69,25 +69,6 @@ public class FlightsController {
         loadFlightsForSelectedDate();
     }
 
-    // ===================== RYSOWANIE =====================
-    /*
-    private void loadTodayFlights() {
-        LocalDate today = LocalDate.now();
-        allFlights.clear();
-
-        for (Airport to : Airport.values()) {
-            if (to == fromAirport) continue;
-            allFlights.addAll(flightService.searchFlights(fromAirport, to, today, today));
-        }
-
-        allFlights.sort(Comparator.comparing(Flight::getTime));
-
-        // ustawiamy listener na TextField
-        // searchField.textProperty().addListener((obs, oldVal, newVal) -> filterFlights(newVal));
-
-        // początkowe wyświetlenie wszystkich lotów
-        filterFlights("");
-    } */
 
     // Wyświetla loty dla wybranej daty na mapie
     private void loadFlightsForSelectedDate() {

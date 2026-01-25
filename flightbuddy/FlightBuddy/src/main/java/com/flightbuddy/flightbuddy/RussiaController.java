@@ -46,7 +46,7 @@ Stolica: Moskwa
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button vvo = new Button("Władywostok (VVO)");
         Button led = new Button("Petersburg (LED)");
         Button svo = new Button("Moskwa (SVO)");

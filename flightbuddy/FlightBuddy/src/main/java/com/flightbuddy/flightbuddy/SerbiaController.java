@@ -46,7 +46,7 @@ Stolica: Belgrad
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
 
         Button beg = new Button("Belgrad (BEG)");
 

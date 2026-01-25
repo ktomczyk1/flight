@@ -46,7 +46,7 @@ Stolica: Haga
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button ams = new Button("Amsterdam (AMS)");
 
         ams.setOnAction(e -> openFlightsView(Airport.AMS));

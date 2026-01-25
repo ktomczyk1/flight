@@ -47,7 +47,7 @@ Stolica: Bruksela
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button bru = new Button("Bruksela (BRU)");
 
         bru.setOnAction(e -> openFlightsView(Airport.BRU));

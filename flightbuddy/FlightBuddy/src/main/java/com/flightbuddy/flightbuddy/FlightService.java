@@ -62,7 +62,7 @@ public class FlightService {
             LocalDate departureDate,
             LocalDate returnDate
     ) {
-        // 🔑 Zwracamy te same obiekty lotów z list
+        //  Zwracamy te same obiekty lotów z list
         List<Flight> outbound = searchFlights(from, to, departureDate, departureDate);
         List<Flight> inbound  = searchFlights(to, from, returnDate, returnDate);
 

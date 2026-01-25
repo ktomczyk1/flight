@@ -46,7 +46,7 @@ Stolica: Sztokholm
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button arn = new Button("Sztokholm (ARN)");
         Button mmx = new Button("Malmo (MMX)");
 

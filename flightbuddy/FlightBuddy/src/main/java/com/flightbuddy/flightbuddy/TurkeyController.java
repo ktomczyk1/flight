@@ -45,7 +45,7 @@ Stolica: Ankara
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button ist = new Button("Stambuł (IST)");
         Button ayt = new Button("Antalya (AYT)");
         Button esb = new Button("Ankara (ESB)");

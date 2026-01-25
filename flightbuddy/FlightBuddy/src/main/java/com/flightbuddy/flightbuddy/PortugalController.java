@@ -46,7 +46,7 @@ Stolica: Lizbona
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button lis = new Button("Lizbona (LIS)");
         Button opo = new Button("Porto (OPO)");
 

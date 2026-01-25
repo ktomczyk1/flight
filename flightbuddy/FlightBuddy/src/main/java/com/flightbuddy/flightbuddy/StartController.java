@@ -377,7 +377,7 @@ public class StartController {
     // ===================== SEARCH =====================
     private void handleSearch() {
 
-        // 1️⃣ musi być zalogowany
+        // musi być zalogowany
         if (loggedInUser == null) {
             showAlert(Alert.AlertType.WARNING,
                     "Brak dostępu",
@@ -385,13 +385,13 @@ public class StartController {
             return;
         }
 
-        // 2️⃣ pobranie danych z formularza
+        //  pobranie danych z formularza
         String fromText = fromField.getText().trim();
         String toText = toField.getText().trim();
         LocalDate departureDate = fromDatePicker.getValue();
         LocalDate returnDate = toDatePicker.getValue();
 
-        // 3️⃣ walidacja
+        //  walidacja
         if (fromText.isEmpty() || toText.isEmpty()
                 || departureDate == null || returnDate == null) {
             showAlert(Alert.AlertType.ERROR,
@@ -414,7 +414,7 @@ public class StartController {
             return;
         }
 
-        // 4️⃣ zamiana tekstu na Airport
+        // zamiana tekstu na Airport
         Airport fromAirport = Airport.fromDisplayName(fromText);
         Airport toAirport = Airport.fromDisplayName(toText);
 
@@ -425,7 +425,7 @@ public class StartController {
             return;
         }
 
-        // 5️⃣ SZUKAMY KONKRETNYCH DAT (ROUND TRIP)
+        //
         RoundTripResult result =
                 flightService.searchRoundTripOnExactDates(
                         fromAirport,
@@ -434,11 +434,10 @@ public class StartController {
                         returnDate
                 );
 
-        // 6️⃣ wyświetlenie wyników
+        // wyświetlenie wyników
         showRoundTripResult(result);
     }
 
-    // Służy jako refresh przy anulowaniu lotów jako admin
     private void safeRefreshSearch() {
         if (!fromField.getText().trim().isEmpty()
                 && !toField.getText().trim().isEmpty()
@@ -625,7 +624,6 @@ public class StartController {
 
         if (selectedOutbound == null || selectedInbound == null) return;
 
-        // 🔒 sprawdzenie statusu
         if (!selectedOutbound.isAvailable() || !selectedInbound.isAvailable()) {
             showAlert(Alert.AlertType.WARNING,
                     "Błąd",

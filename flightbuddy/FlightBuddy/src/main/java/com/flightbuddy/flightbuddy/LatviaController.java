@@ -46,7 +46,7 @@ Stolica: Ryga
         Label airportsTitle = new Label("Lotniska:");
         airportsTitle.setStyle("-fx-font-weight: bold;");
 
-        // === LOTNISKA (NA RAZIE BEZ AKCJI) ===
+        // === LOTNISKA
         Button rix = new Button("Ryga (RIX)");
 
         rix.setOnAction(e -> openFlightsView(Airport.RIX));
